@@ -1,11 +1,8 @@
 import React from 'react'
 import { useState } from 'react'
-
-const Record = ({ record }) => {
-  return (
-    <li>{record.name} {record.number}</li>
-  )
-}
+import Filter from './components/Filter'
+import PersonForm from './components/PersonForm'
+import Persons from './components/Persons'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -56,39 +53,14 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      {/* <div>debug: {newName}</div>
-      <div>debug: {newNumber}</div> */}
-      <div>
-        filter shown with <input 
-          onChange={handleFilterChange}
-        />
-      </div>
-      <h2>add a new</h2>
-      <form onSubmit={addPersonWithoutDuplicates}>
-        <div>
-          name: 
-          <input 
-            value={newName}
-            onChange={handleNameChange}
-          />
-        </div>
-        <div>
-          number:
-          <input 
-            value={newNumber}
-            onChange={handleNumberChange}
-          />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      <ul style={{ listStyleType: "none", paddingLeft: 0 }}>
-        {
-        personsToShow.map(person => <Record key={person.name} record={person} />)
-        }
-      </ul>
+      <Filter filterName={filterName} handleFilterChange={handleFilterChange} />
+      <h3>Add a new</h3>
+      <PersonForm addPersonWithoutDuplicates={addPersonWithoutDuplicates}
+        newName={newName} handleNameChange={handleNameChange}
+        newNumber={newNumber} handleNumberChange={handleNumberChange}
+      />
+      <h3>Numbers</h3>
+      <Persons personsToShow={personsToShow} />
     </div>
   )
 }
