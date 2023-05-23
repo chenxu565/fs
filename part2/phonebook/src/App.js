@@ -23,6 +23,20 @@ const App = () => {
     console.log('button clicked', event.target)
   }
 
+  const addPersonWithoutDuplicates = (event) => {
+    event.preventDefault()
+    const personObject = {
+      name: newName,
+    }
+    if (persons.some(person => person.name === newName)) {
+      alert(`${newName} is already added to phonebook`)
+    } else {
+      setPersons(persons.concat(personObject))
+      setNewName('')
+    }
+    console.log('button clicked', event.target)
+  }
+
   const handlePersonChange = (event) => {
     console.log(event.target.value)
     setNewName(event.target.value)
@@ -35,7 +49,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <form onSubmit={addPerson}>
+      <form onSubmit={addPersonWithoutDuplicates}>
         <div>
           name: 
           <input 
