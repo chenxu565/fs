@@ -3,48 +3,43 @@ import { useState } from 'react'
 
 const Record = ({ record }) => {
   return (
-    <li>{record.name}</li>
+    <li>{record.name} {record.number}</li>
   )
 }
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas' }
+    { name: 'Arto Hellas' ,
+      number: '040-1234567'}
   ]) 
   const [newName, setNewName] = useState('')
-
-  const addPerson = (event) => {
-    event.preventDefault()
-    const personObject = {
-      name: newName,
-    }
-    setPersons(persons.concat(personObject))
-    setNewName('')
-    console.log('button clicked', event.target)
-  }
+  const [newNumber, setNewNumber] = useState('')
 
   const addPersonWithoutDuplicates = (event) => {
     event.preventDefault()
     const personObject = {
       name: newName,
+      number : newNumber
     }
     if (persons.some(person => person.name === newName)) {
       alert(`${newName} is already added to phonebook`)
     } else {
       setPersons(persons.concat(personObject))
       setNewName('')
+      setNewNumber('')
     }
     console.log('button clicked', event.target)
   }
-
-  const handlePersonChange = (event) => {
+  
+  const handleNameChange = (event) => {
     console.log(event.target.value)
     setNewName(event.target.value)
   }
 
-  const rows = () => persons.map(person =>
-    <Record key={person.name} record={person} />
-  )
+  const handleNumberChange = (event) => {
+    console.log(event.target.value)
+    setNewNumber(event.target.value)
+  }
 
   return (
     <div>
@@ -54,7 +49,14 @@ const App = () => {
           name: 
           <input 
             value={newName}
-            onChange={handlePersonChange}
+            onChange={handleNameChange}
+          />
+        </div>
+        <div>
+          number:
+          <input 
+            value={newNumber}
+            onChange={handleNumberChange}
           />
         </div>
         <div>
@@ -63,7 +65,9 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       <ul style={{ listStyleType: "none", paddingLeft: 0 }}>
-        {rows()}
+        {
+        persons.map(person => <Record key={person.name} record={person} />)
+        }
       </ul>
     </div>
   )
