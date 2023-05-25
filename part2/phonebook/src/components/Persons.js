@@ -6,11 +6,12 @@ const Persons = ({ personsToShow, deleteRecord }) => {
     return (
       <ul style={{ listStyleType: "none", paddingLeft: 0 }}>
         {
-          personsToShow.map(person => 
+          personsToShow.map(record => 
           <SingleRecord 
-            key={person.name} 
-            record={person} 
-            deleteRecord={() => deleteRecord(person.id)}  
+            key={record.name} 
+            record={record} 
+            // deleteRecord={() => deleteRecord(record.id)}  
+            deleteRecord={deleteRecord}
           />)
         }
       </ul>
