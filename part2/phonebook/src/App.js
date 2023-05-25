@@ -4,12 +4,14 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import personService from './services/persons'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filterName, setFilter] = useState('')
+  const [message, setMessage] = useState(null)
 
   const hook = () => {
     personService
@@ -41,6 +43,13 @@ const App = () => {
             setPersons(persons.map(p => p.id !== foundPerson.id ? p : returnedPerson))
             setNewName('')
             setNewNumber('')
+            setMessage(
+              `Updated ${returnedPerson.name}`
+            )
+            setTimeout(() => {
+              setMessage(null)
+            }
+            , 5000)
           })
           .catch(error => {
             alert(
@@ -58,6 +67,13 @@ const App = () => {
           setPersons(persons.concat(returnedPerson))
           setNewName('')
           setNewNumber('')
+          setMessage(
+            `Added ${returnedPerson.name}`
+          )
+          setTimeout(() => {
+            setMessage(null)
+          }
+          , 5000)
         })
     }
     console.log('button clicked', event.target)
@@ -88,6 +104,9 @@ const App = () => {
         .deleteRecord(id)
         .then(() => {
           setPersons(persons.filter(p => p.id !== id))
+          setMessage(
+            `Deleted ${person.name}`
+          )
         })
         .catch(error => {
           alert(`the person '${person.name}' was already deleted from server`)
@@ -99,6 +118,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
       <Filter filterName={filterName} handleFilterChange={handleFilterChange} />
       <h3>Add a new</h3>
       <PersonForm addPersonWithoutDuplicates={addPersonWithoutDuplicates}
