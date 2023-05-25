@@ -1,8 +1,11 @@
 import React from "react"
 
-const SingleRecord = ({ record }) => {
+const SingleRecord = ({ record, deleteRecord }) => {
     return (
-      <li>{record.name} {record.number}</li>
+      <li>
+        {record.name} {record.number} {' '}
+        <button onClick={deleteRecord}>delete</button>
+      </li>
     )
   }
 export default SingleRecord

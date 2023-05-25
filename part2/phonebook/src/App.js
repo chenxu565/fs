@@ -61,6 +61,17 @@ const App = () => {
   const personsToShow = 
   persons.filter(person => person.name.toLowerCase().includes(filterName.toLowerCase()))
 
+  const deleteRecord = (id) => {
+    const person = persons.find(p => p.id === id)
+    if (window.confirm(`Delete ${person.name}?`)) {
+      personService
+        .deleteRecord(id)
+        .then(() => {
+          setPersons(persons.filter(p => p.id !== id))
+        })
+    }
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -71,7 +82,7 @@ const App = () => {
         newNumber={newNumber} handleNumberChange={handleNumberChange}
       />
       <h3>Numbers</h3>
-      <Persons personsToShow={personsToShow} />
+      <Persons personsToShow={personsToShow} deleteRecord={deleteRecord} />
     </div>
   )
 }
