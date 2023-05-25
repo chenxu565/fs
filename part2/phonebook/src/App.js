@@ -12,6 +12,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [filterName, setFilter] = useState('')
   const [message, setMessage] = useState(null)
+  const [messageType, setMessageType] = useState("green")
 
   const hook = () => {
     personService
@@ -35,45 +36,54 @@ const App = () => {
     if (foundPerson) {
       console.log('%cApp.js line:34 foundPerson', 'color: #007acc;', foundPerson);
       if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
-        
+        // update existing person
         const changedPerson = { ...foundPerson, number: newNumber }
-        personService
+        personService 
           .update(foundPerson.id, changedPerson)
-          .then(returnedPerson => {
+          .then(returnedPerson => { // update success
             setPersons(persons.map(p => p.id !== foundPerson.id ? p : returnedPerson))
             setNewName('')
             setNewNumber('')
             setMessage(
               `Updated ${returnedPerson.name}`
             )
+            setMessageType("green")
             setTimeout(() => {
               setMessage(null)
             }
             , 5000)
           })
-          .catch(error => {
-            alert(
+          .catch(error => { // already deleted
+            setMessage(
               `the person '${foundPerson.name}' does not exist on server`
             )
+            setMessageType("red")
             setPersons(persons.filter(p => p.id !== foundPerson.id))
           })
       }
     }
     
-    else {
+    else { // add new person
       personService
         .create(personObject)
-        .then(returnedPerson => {
+        .then(returnedPerson => { // add success
           setPersons(persons.concat(returnedPerson))
           setNewName('')
           setNewNumber('')
           setMessage(
             `Added ${returnedPerson.name}`
           )
+          setMessageType("green")
           setTimeout(() => {
             setMessage(null)
           }
           , 5000)
+        })
+        .catch(error => { // validation error
+          setMessage(
+            `${error.response.data.error}`
+          )
+          setMessageType("red")
         })
     }
     console.log('button clicked', event.target)
@@ -100,16 +110,20 @@ const App = () => {
   const deleteRecord = (id) => {
     const person = persons.find(p => p.id === id)
     if (window.confirm(`Delete ${person.name}?`)) {
-      personService
+      personService // delete from server
         .deleteRecord(id)
-        .then(() => {
+        .then(() => { // delete success
           setPersons(persons.filter(p => p.id !== id))
           setMessage(
             `Deleted ${person.name}`
           )
+          setMessageType("green")
         })
-        .catch(error => {
-          alert(`the person '${person.name}' was already deleted from server`)
+        .catch(error => { // already deleted
+          setMessage(
+            `the person '${person.name}' was already deleted from server`
+          )
+          setMessageType("red")
           setPersons(persons.filter(p => p.id !== id))
         })
     }
@@ -118,7 +132,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={message} />
+      <Notification message={message} messageType={messageType}/>
       <Filter filterName={filterName} handleFilterChange={handleFilterChange} />
       <h3>Add a new</h3>
       <PersonForm addPersonWithoutDuplicates={addPersonWithoutDuplicates}
