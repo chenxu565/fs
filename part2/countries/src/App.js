@@ -6,6 +6,7 @@ import CountryNameList from './components/CountryNameList'
 const App = () => {
   const [filterName, setFilter] = useState('')
   const [countries, setCountries] = useState(null)
+  const [selectedCountry, setSelectedCountry] = useState(null)
 
   useEffect(() => {
     console.log('fetching all countries...')
@@ -23,16 +24,24 @@ const App = () => {
   }
 
   const handleFiltered = (event) => {
+    setSelectedCountry(null)
     setFilter(event.target.value)
+  }
+
+  const handleShowClick = (country) => {
+    setSelectedCountry(country)
+    setFilter('')
   }
 
   const filtered = countries.filter(country => country.name.common.toLowerCase().includes(filterName.toLowerCase()))
 
-  const countriesToShow = filtered.length > 10
-    ? 'Too many matches, specify another filter'
-    : filtered.length <= 1 && filtered.length >= 1
-      ? <CountriesDetail filtered={filtered} />
-      : <CountryNameList filtered={filtered} />
+  const countriesToShow = selectedCountry
+    ? <CountriesDetail filtered={[selectedCountry]} />
+    : filtered.length > 10
+      ? 'Too many matches, specify another filter'
+      : filtered.length <= 1 && filtered.length >= 1
+        ? <CountriesDetail filtered={filtered} />
+        : <CountryNameList filtered={filtered} handleShowClick={handleShowClick}/>
 
   return (
     <div>
