@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import CountryDetail from './components/CountryDetail'
+import CountriesDetail from './components/CountriesDetail'
 import CountryNameList from './components/CountryNameList'
 
 const App = () => {
@@ -31,9 +31,8 @@ const App = () => {
   const countriesToShow = filtered.length > 10
     ? 'Too many matches, specify another filter'
     : filtered.length <= 1 && filtered.length >= 1
-      ? <CountryDetail filtered={filtered} />
+      ? <CountriesDetail filtered={filtered} />
       : <CountryNameList filtered={filtered} />
-      
 
   return (
     <div>
