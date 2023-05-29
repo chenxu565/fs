@@ -76,7 +76,7 @@ const App = () => {
   const weatherToShow = weather && selectedCountry
     ? <div>
         <h2>Weather in {selectedCountry.capital}</h2>
-        <div>temperature {(weather.current.temp - 273.15).toFixed(2)} Celsius</div>
+        <div>temperature {(weather.current.temp).toFixed(2)} Celsius</div>
         <img src={`https://openweathermap.org/img/wn/${weather.current.weather[0].icon}.png`} alt={weather.current.weather[0].description} />
         <div>wind {weather.current.wind_speed} m/s</div>
       </div>
