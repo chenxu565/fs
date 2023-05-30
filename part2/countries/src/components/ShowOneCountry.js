@@ -2,16 +2,10 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 const ShowOneCountry = ({ country , handleSet}) => {
-  // console.log(country.capitalInfo.latlng)
-  // useEffect(() => {
-  //   setSelectedCountry(country);
-  // }, []);
-  // useEffect(() => {
-  //   handleSet(country)
-  // }, [])
+
   const [weather, setWeather] = useState(null)
   const api_key = process.env.REACT_APP_API_KEY
-  
+
   useEffect(() => {
     if (country) {
       console.log('fetching weather...')
