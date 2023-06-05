@@ -26,46 +26,46 @@ let persons = [
     }
 ]
 
-app.get('/', (req, res) => {
-  res.send('<h1>Hello World!</h1>')
+app.get('/', (request, response) => {
+  response.send('<h1>Hello World!</h1>')
 })
 
-app.get('/info', (req, res) => {
+app.get('/info', (request, response) => {
     const date = new Date()
-    res.send(`<p>Phonebook has info for ${persons.length} people</p><p>${date}</p>`)
+    response.send(`<p>Phonebook has info for ${persons.length} people</p><p>${date}</p>`)
     }
 )
 
-app.get('/api/persons', (req, res) => {
-  res.json(persons)
+app.get('/api/persons', (request, response) => {
+  response.json(persons)
 })
 
-app.get('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id)
+app.get('/api/persons/:id', (request, response) => {
+    const id = Number(request.params.id)
     console.log(id)
     const person = persons.find(person => person.id === id)
     console.log(person)
     if (person) {
-        res.json(person)
+        response.json(person)
     } else {
-        res.status(404).end()
+        response.status(404).end()
     }
 }
 )
 
-app.delete('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id)
+app.delete('/api/persons/:id', (request, response) => {
+    const id = Number(request.params.id)
     persons = persons.filter(person => person.id !== id)
   
-    res.status(204).end()
+    response.status(204).end()
   }
 )
 
-app.post('/api/persons', (req, res) => {
-    const body = req.body
+app.post('/api/persons', (request, response) => {
+    const body = request.body
     console.log(body)
     if (!body.name || !body.number) { 
-      return res.status(400).json({ 
+      return response.status(400).json({ 
         error: 'content missing' 
       })
     }
@@ -74,7 +74,7 @@ app.post('/api/persons', (req, res) => {
     // console.log('found?')
     // console.log(found)
     if (found) {
-        return res.status(400).json({ 
+        return response.status(400).json({ 
             error: 'name must be unique' 
           })
     }
@@ -85,7 +85,7 @@ app.post('/api/persons', (req, res) => {
     }
     console.log(person)
     persons = persons.concat(person)
-    res.json(person)
+    response.json(person)
   }
 )
 
