@@ -61,6 +61,34 @@ app.delete('/api/persons/:id', (req, res) => {
   }
 )
 
+app.post('/api/persons', (req, res) => {
+    const body = req.body
+    console.log(body)
+    if (!body.name || !body.number) { 
+      return res.status(400).json({ 
+        error: 'content missing' 
+      })
+    }
+    
+    const found = persons.find(person => person.name === body.name)
+    // console.log('found?')
+    // console.log(found)
+    if (found) {
+        return res.status(400).json({ 
+            error: 'name must be unique' 
+          })
+    }
+    const person = {
+      name: body.name,
+      number: body.number,
+      id: Math.floor(Math.random() * 10000),
+    }
+    console.log(person)
+    persons = persons.concat(person)
+    res.json(person)
+  }
+)
+
 const PORT = 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
