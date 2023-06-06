@@ -1,7 +1,26 @@
 const express = require('express')
 const app = express()
+const morgan = require('morgan') // import morgan
 
 app.use(express.json())
+// app.use(morgan('tiny')) // use tiny format
+
+// Create a new token ':body'
+morgan.token('body', function (req, res) { 
+  return Object.keys(req.body).length ? JSON.stringify(req.body) : null 
+})
+
+// Use morgan middleware with custom format
+app.use(morgan(function (tokens, req, res) {
+  return [
+    tokens.method(req, res),
+    tokens.url(req, res),
+    tokens.status(req, res),
+    tokens.res(req, res, 'content-length'), '-',
+    tokens['response-time'](req, res), 'ms',
+    tokens.body(req, res) ? `- ${tokens.body(req, res)}` : ''
+  ].join(' ')
+}))
 
 let persons = [
     { 
@@ -63,7 +82,7 @@ app.delete('/api/persons/:id', (request, response) => {
 
 app.post('/api/persons', (request, response) => {
     const body = request.body
-    console.log(body)
+    // console.log(body)
     if (!body.name || !body.number) { 
       return response.status(400).json({ 
         error: 'content missing' 
@@ -83,7 +102,7 @@ app.post('/api/persons', (request, response) => {
       number: body.number,
       id: Math.floor(Math.random() * 10000),
     }
-    console.log(person)
+    // console.log(person)
     persons = persons.concat(person)
     response.json(person)
   }
