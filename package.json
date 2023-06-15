@@ -11,6 +11,7 @@
   "author": "Chen",
   "license": "MIT",
   "devDependencies": {
+    "@flydotio/dockerfile": "^0.2.15",
     "nodemon": "^2.0.22"
   },
   "dependencies": {
