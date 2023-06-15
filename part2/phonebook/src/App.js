@@ -118,6 +118,10 @@ const App = () => {
             `Deleted ${person.name}`
           )
           setMessageType("green")
+          setTimeout(() => {
+            setMessage(null)
+          }
+          , 5000)
         })
         .catch(error => { // already deleted
           setMessage(
