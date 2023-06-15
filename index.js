@@ -5,6 +5,9 @@ const morgan = require('morgan') // import morgan
 app.use(express.json())
 // app.use(morgan('tiny')) // use tiny format
 
+// cors
+const cors = require('cors')
+app.use(cors())
 // Create a new token ':body'
 morgan.token('body', function (req, res) { 
   return Object.keys(req.body).length ? JSON.stringify(req.body) : null 
