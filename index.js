@@ -17,24 +17,21 @@ app.use(express.json())
 const cors = require('cors')
 app.use(cors())
 // Create a new token ':body'
-morgan.token('body', function (req, res) { 
-  return Object.keys(req.body).length ? JSON.stringify(req.body) : null 
+morgan.token('body', function (request, response) { 
+  return Object.keys(request.body).length ? JSON.stringify(request.body) : null 
 })
 
 // Use morgan middleware with custom format
-app.use(morgan(function (tokens, req, res) {
+app.use(morgan(function (tokens, request, response) {
   return [
-    tokens.method(req, res),
-    tokens.url(req, res),
-    tokens.status(req, res),
-    tokens.res(req, res, 'content-length'), '-',
-    tokens['response-time'](req, res), 'ms',
-    tokens.body(req, res) ? `- ${tokens.body(req, res)}` : ''
+    tokens.method(request, response),
+    tokens.url(request, response),
+    tokens.status(request, response),
+    tokens.res(request, response, 'content-length'), '-',
+    tokens['response-time'](request, response), 'ms',
+    tokens.body(request, response) ? `- ${tokens.body(request, response)}` : ''
   ].join(' ')
 }))
-
-let persons = [
-]
 
 app.get('/', (request, response) => {
   response.send('<h1>Hello World!</h1>')
