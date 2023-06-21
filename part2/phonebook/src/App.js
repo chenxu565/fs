@@ -59,6 +59,10 @@ const App = () => {
             )
             setMessageType("red")
             setPersons(persons.filter(p => p.id !== foundPerson.id))
+            setTimeout(() => {
+              setMessage(null)
+            }
+            , 5000)
           })
       }
     }
@@ -84,6 +88,10 @@ const App = () => {
             `${error.response.data.error}`
           )
           setMessageType("red")
+          setTimeout(() => {
+            setMessage(null)
+          }
+          , 5000)
         })
     }
     console.log('button clicked', event.target)
@@ -129,6 +137,10 @@ const App = () => {
           )
           setMessageType("red")
           setPersons(persons.filter(p => p.id !== id))
+          setTimeout(() => {
+            setMessage(null)
+          }
+          , 5000)
         })
     }
   }
