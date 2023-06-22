@@ -30,8 +30,8 @@ app.use(express.json())
 const cors = require('cors')
 app.use(cors())
 // Create a new token ':body'
-morgan.token('body', function (request, response) { 
-  return Object.keys(request.body).length ? JSON.stringify(request.body) : null 
+morgan.token('body', function (request) {
+  return Object.keys(request.body).length ? JSON.stringify(request.body) : null
 })
 
 // Use morgan middleware with custom format
@@ -51,12 +51,12 @@ app.get('/', (request, response) => {
 })
 
 app.get('/info', (request, response) => {
-    const date = new Date()
-    Person.find({}).then(persons => {
-        // console.log(persons)
-        response.send(`<p>Phonebook has info for ${persons.length} people</p><p>${date}</p>`)
-    }
-)
+  const date = new Date()
+  Person.find({}).then(persons => {
+    // console.log(persons)
+    response.send(`<p>Phonebook has info for ${persons.length} people</p><p>${date}</p>`)
+  }
+  )
 })
 
 app.get('/api/persons', (request, response) => {
@@ -76,7 +76,7 @@ app.post('/api/persons', (request, response, next) => {
   person.save().then(savedPerson => {
     response.json(savedPerson)
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
 app.get('/api/persons/:id', (request, response, next) => {
@@ -93,24 +93,24 @@ app.get('/api/persons/:id', (request, response, next) => {
 
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndRemove(request.params.id)
-    .then(result => {
+    .then(() => {
       response.status(204).end() // 204 No Content
     })
     .catch(error => next(error))
-  }
+}
 )
 
 app.put('/api/persons/:id', (request, response, next) => {
   const { name, number } = request.body
   Person.findByIdAndUpdate(
-    request.params.id, 
-    { name, number }, 
+    request.params.id,
+    { name, number },
     { new: true, runValidators: true, context: 'query' })
     .then(updatedPerson => {
       response.json(updatedPerson)
     })
     .catch(error => next(error))
-  }
+}
 )
 
 app.use(unknownEndpoint)
