@@ -53,16 +53,30 @@ const App = () => {
             }
             , 5000)
           })
-          .catch(error => { // already deleted
-            setMessage(
-              `the person '${foundPerson.name}' does not exist on server`
-            )
-            setMessageType("red")
-            setPersons(persons.filter(p => p.id !== foundPerson.id))
-            setTimeout(() => {
-              setMessage(null)
+          .catch(error => {
+            console.log('%cApp.js line:52 error', 'color: #007acc;', error.response.data.error);
+            console.log('%cApp.js line:53 error', 'color: #007acc;', error);
+            if (error.response.data.error.startsWith("Validation")) {
+              setMessage(
+                `${error.response.data.error}`
+              )
+              setMessageType("red")
+              setTimeout(() => {
+                setMessage(null)
+              }
+              , 5000)
             }
-            , 5000)
+            else{
+              setMessage(
+                `the person '${foundPerson.name}' does not exist on server`
+              )
+              setMessageType("red")
+              setPersons(persons.filter(p => p.id !== foundPerson.id))
+              setTimeout(() => {
+                setMessage(null)
+              }
+              , 5000)
+            }
           })
       }
     }
@@ -132,6 +146,7 @@ const App = () => {
           , 5000)
         })
         .catch(error => { // already deleted
+          console.log('%cApp.js line:105 error', 'color: #007acc;', error.response.data.error);
           setMessage(
             `the person '${person.name}' was already deleted from server`
           )
