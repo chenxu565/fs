@@ -60,7 +60,7 @@ app.get('/api/persons', (request, response) => {
   })
 })
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
   const body = request.body
   // console.log(body)
   if (!body.name || !body.number) { 
@@ -79,7 +79,7 @@ app.post('/api/persons', (request, response) => {
   })
 })
 
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response, next) => {
   Person.findById(request.params.id)
     .then(person => {
       if (person) {
@@ -91,7 +91,7 @@ app.get('/api/persons/:id', (request, response) => {
     .catch(error => next(error)) // pass the error to the error handler middleware
 })
 
-app.delete('/api/persons/:id', (request, response) => {
+app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndRemove(request.params.id)
     .then(result => {
       response.status(204).end() // 204 No Content
