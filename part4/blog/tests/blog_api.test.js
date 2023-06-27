@@ -111,6 +111,38 @@ describe('addition of a new blog', () => {
 
 })
 
+describe('deletion of a blog', () => {
+  test('succeeds with status code 204 if id is valid', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToDelete = blogsAtStart[0]
+
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .expect(204)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1)
+
+    expect(blogsAtEnd).not.toContainEqual(expect.objectContaining(blogToDelete))
+  })
+
+  test('fails with status code 404 if id is valid but does not exist', async () => {
+    const nonExistentValidId = '555555555555555555555555'
+
+    await api
+      .delete(`/api/blogs/${nonExistentValidId}`)
+      .expect(404)
+  })
+
+  test('fails with status code 400 if id is invalid', async () => {
+    const invalidId = 'not-a-valid-id'
+
+    await api
+      .delete(`/api/blogs/${invalidId}`)
+      .expect(400)
+  })
+})
+
 afterAll(async() => {
   await mongoose.connection.close()
 })
