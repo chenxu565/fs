@@ -25,14 +25,41 @@ blogsRouter.post('/', async (request, response) => {
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
-  const blog = await Blog.findById(request.params.id)
-
-  if (blog) { // blog found
-    await blog.deleteOne()
-    response.status(204).end()
-  } else { // blog not found
-    response.status(404).end()
-  }
+  await Blog.findByIdAndDelete(request.params.id).orFail(new Error('BlogNotFound'))
+  response.status(204).end()
 })
+
+// blogsRouter.delete('/:id', async (request, response) => {
+//   const blog = await Blog.findById(request.params.id)
+
+//   if (blog) { // blog found
+//     await blog.deleteOne()
+//     response.status(204).end()
+//   } else { // blog not found
+//     response.status(404).end()
+//   }
+// })
+
+
+// blogsRouter.put('/:id', async (request, response) => {
+//   const body = request.body
+
+//   const blog = {
+//     likes: body.likes
+//   }
+
+//   const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true }).orFail(new Error('BlogNotFound'))
+//   response.json(updatedBlog)
+// })
+// blogsRouter.put('/:id', async (request, response) => {
+//   const body = request.body
+
+//   const blog = {
+//     likes: body.likes
+//   }
+
+//   const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
+//   response.json(updatedBlog)
+// })
 
 module.exports = blogsRouter
