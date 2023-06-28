@@ -35,7 +35,7 @@ blogsRouter.put('/:id', async (request, response) => {
     request.body,
     { new: true, runValidators: true, context: 'query' })
     .orFail(new Error('BlogNotFound'))
-  console.log(updatedBlog)
+  // console.log(updatedBlog)
   response.json(updatedBlog)
 })
 
