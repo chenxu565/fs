@@ -127,10 +127,10 @@ describe('deletion of a blog', () => {
   })
 
   test('fails with status code 404 if id is valid but does not exist', async () => {
-    const nonExistentValidId = '555555555555555555555555'
+    const validNonExistentId = await helper.nonExistentId()
 
     await api
-      .delete(`/api/blogs/${nonExistentValidId}`)
+      .delete(`/api/blogs/${validNonExistentId}`)
       .expect(404)
   })
 
