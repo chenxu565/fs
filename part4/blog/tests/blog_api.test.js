@@ -211,6 +211,34 @@ describe('updating a blog', () => {
   })
 })
 
+describe('viewing a specific blog', () => {
+  test('succeeds with status code 200 if id is valid', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToView = blogsAtStart[0]
+
+    await api
+      .get(`/api/blogs/${blogToView.id}`)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+  })
+
+  test('fails with status code 404 if id is valid but does not exist', async () => {
+    const validNonExistentId = await helper.nonExistentId()
+
+    await api
+      .get(`/api/blogs/${validNonExistentId}`)
+      .expect(404)
+  })
+
+  test('fails with status code 400 if id is invalid', async () => {
+    const invalidId = 'not-a-valid-id'
+
+    await api
+      .get(`/api/blogs/${invalidId}`)
+      .expect(400)
+  })
+})
+
 afterAll(async() => {
   await mongoose.connection.close()
 })
