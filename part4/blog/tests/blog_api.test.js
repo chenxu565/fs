@@ -12,6 +12,7 @@ beforeEach(async () => {
   await Blog.insertMany(helper.initialBlogs)
 })
 
+describe('get blogs', () => {
 test('blogs are returned as json', async () => {
   await api
     .get('/api/blogs')
@@ -29,6 +30,7 @@ test('unique identifier property of the blog posts is named id', async () => {
   const res = await api.get('/api/blogs')
 
   expect(res.body[0].id).toBeDefined()
+})
 })
 
 describe('addition of a new blog', () => {
