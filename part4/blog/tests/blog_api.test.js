@@ -13,24 +13,24 @@ beforeEach(async () => {
 })
 
 describe('get blogs', () => {
-test('blogs are returned as json', async () => {
-  await api
-    .get('/api/blogs')
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
-})
+  test('blogs are returned as json', async () => {
+    await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+  })
 
-test('all blogs are returned', async () => {
-  const res = await api.get('/api/blogs')
+  test('all blogs are returned', async () => {
+    const res = await api.get('/api/blogs')
 
-  expect(res.body).toHaveLength(helper.initialBlogs.length)
-})
+    expect(res.body).toHaveLength(helper.initialBlogs.length)
+  })
 
-test('unique identifier property of the blog posts is named id', async () => {
-  const res = await api.get('/api/blogs')
+  test('unique identifier property of the blog posts is named id', async () => {
+    const res = await api.get('/api/blogs')
 
-  expect(res.body[0].id).toBeDefined()
-})
+    expect(res.body[0].id).toBeDefined()
+  })
 })
 
 describe('addition of a new blog', () => {
@@ -142,6 +142,72 @@ describe('deletion of a blog', () => {
     await api
       .delete(`/api/blogs/${invalidId}`)
       .expect(400)
+  })
+})
+
+describe('updating a blog', () => {
+  test('succeeds with status code 200 if id is valid', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToUpdate = blogsAtStart[0]
+
+    const updatedBlog = {
+      title: 'Updated Title',
+      author: 'Updated Author',
+      url: 'http://www.updatedurl.com',
+      likes: blogToUpdate.likes + 1
+    }
+
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(updatedBlog)
+      .expect(200)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+
+    expect(blogsAtEnd).toContainEqual(expect.objectContaining(updatedBlog))
+  })
+
+  test('fails with status code 404 if id is valid but does not exist', async () => {
+    const validNonExistentId = await helper.nonExistentId()
+
+    const updatedBlog = {
+      title: 'Updated Title',
+      author: 'Updated Author',
+      url: 'http://www.updatedurl.com',
+      likes: 1
+    }
+
+    await api
+      .put(`/api/blogs/${validNonExistentId}`)
+      .send(updatedBlog)
+      .expect(404)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+
+    expect(blogsAtEnd).not.toContainEqual(expect.objectContaining(updatedBlog))
+  })
+
+  test('fails with status code 400 if id is invalid', async () => {
+    const invalidId = 'not-a-valid-id'
+
+    const updatedBlog = {
+      title: 'Updated Title',
+      author: 'Updated Author',
+      url: 'http://www.updatedurl.com',
+      likes: 1
+    }
+
+    await api
+      .put(`/api/blogs/${invalidId}`)
+      .send(updatedBlog)
+      .expect(400)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+
+    expect(blogsAtEnd).not.toContainEqual(expect.objectContaining(updatedBlog))
   })
 })
 
