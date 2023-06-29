@@ -7,3 +7,14 @@ Content-Type: application/json
   "url": "http://localhost:3003/api/blogs",
   "likes": 1
 }
+
+###
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+  "title": "Ensure that everything still works 2",
+  "author": "Test Author",
+  "url": "http://example.com",
+  "likes": 13
+}
