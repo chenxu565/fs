@@ -1,4 +1,5 @@
 const logger = require('./logger')
+const jwt = require('jsonwebtoken')
 
 const requestLogger = (request, response, next) => {
   logger.info('Method:', request.method)
@@ -19,8 +20,10 @@ const errorHandler = (error, request, response, next) => {
     return response.status(400).send({ error: 'malformatted id' })
   } else if (error.name === 'ValidationError') {
     return response.status(400).json({ error: error.message })
-  } else if (error.message === 'BlogNotFound') {
-    return response.status(404).end()
+  } else if (error.message.includes('NotFound')) {
+    return response.status(404).json({ error: error.message })
+  } else if (error instanceof jwt.JsonWebTokenError) {
+    return response.status(401).json({ error: error.message })
   }
 
   next(error)
