@@ -244,6 +244,7 @@ describe('when there is initially some blogs saved', () => {
 
 describe('when there is initially one user in db', () => {
   beforeEach(async () => {
+    await Blog.deleteMany({})
     await User.deleteMany({})
     const passwordHash = await bcrypt.hash('password', 10)
     const user = new User({ username: 'root', passwordHash })
