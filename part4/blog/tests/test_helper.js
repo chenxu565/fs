@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt')
 const Blog = require('../models/blog')
 const User = require('../models/user')
 
@@ -11,10 +12,21 @@ const initialBlogs = [
   {
     title: 'Go To Statement Considered Harmful',
     author: 'Edsger W. Dijkstra',
-    url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+    url: 'http://www.example.com/',
     likes: 5
   },
 ]
+
+const initialUser =
+  {
+    username: 'defaultUser',
+    name: 'Default User',
+  }
+
+const getHashedPassword = async () => {
+  const hashedPassword = await bcrypt.hash('defaultPassword', 10)
+  return hashedPassword
+}
 
 const nonExistentId = async () => {
   const blog = new Blog({ title: 'willremovethissoon', author: 'willremovethissoon', url: 'willremovethissoon', likes: 0 })
@@ -38,5 +50,7 @@ module.exports = {
   initialBlogs,
   nonExistentId,
   blogsInDb,
-  usersInDb
+  usersInDb,
+  initialUser,
+  getHashedPassword
 }

@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const bcrypt = require('bcrypt')
 const app = require('../app')
+const jwt = require('jsonwebtoken')
 
 const api = supertest(app)
 
@@ -9,10 +10,33 @@ const Blog = require('../models/blog')
 const User = require('../models/user')
 const helper = require('./test_helper')
 
-describe('when there is initially some blogs saved', () => {
+describe('Testing blog routers', () => {
+  let bearerToken = null
   beforeEach(async () => {
+    // Clear the database and insert the initial blogs and users
     await Blog.deleteMany({})
     await Blog.insertMany(helper.initialBlogs)
+    await User.deleteMany({})
+    const hashedPassword = await helper.getHashedPassword()
+    const usersResult = await User.insertMany([{ ...helper.initialUser, passwordHash: hashedPassword }])
+    const user = usersResult[0]
+
+    // Link the user to the blogs
+    const blogs = await helper.blogsInDb()
+    const blogsWithUsers = blogs.map(blog => {return { ...blog, user: user._id }})
+    await Blog.deleteMany({})
+    const blogsResult = await Blog.insertMany(blogsWithUsers)
+    // Link the blogs to the user
+    const blogIds = blogsResult.map(blog => blog._id)
+    await User.findByIdAndUpdate(user._id, { blogs: blogIds })
+
+    // Get the token for the user
+    const userForTokenObject = {
+      username: user.username,
+      id: user._id
+    }
+    const token = jwt.sign(userForTokenObject, process.env.SECRET)
+    bearerToken = `Bearer ${token}`
   })
 
   test('blogs are returned as json', async () => {
@@ -34,9 +58,10 @@ describe('when there is initially some blogs saved', () => {
     expect(res.body[0].id).toBeDefined()
   })
 
-
   describe('addition of a new blog', () => {
+
     test('a valid blog can be added', async () => {
+      // console.log(bearerToken)
       const newBlog = {
         title: 'Test Blog',
         author: 'Test Author',
@@ -46,6 +71,7 @@ describe('when there is initially some blogs saved', () => {
 
       await api
         .post('/api/blogs')
+        .set('Authorization', bearerToken)
         .send(newBlog)
         .expect(201)
         .expect('Content-Type', /application\/json/)
@@ -65,6 +91,7 @@ describe('when there is initially some blogs saved', () => {
 
       await api
         .post('/api/blogs')
+        .set('Authorization', bearerToken)
         .send(newBlog)
         .expect(201)
         .expect('Content-Type', /application\/json/)
@@ -84,6 +111,7 @@ describe('when there is initially some blogs saved', () => {
 
       await api
         .post('/api/blogs')
+        .set('Authorization', bearerToken)
         .send(newBlog)
         .expect(400)
     })
@@ -97,6 +125,7 @@ describe('when there is initially some blogs saved', () => {
 
       await api
         .post('/api/blogs')
+        .set('Authorization', bearerToken)
         .send(newBlog)
         .expect(400)
     })
@@ -109,10 +138,29 @@ describe('when there is initially some blogs saved', () => {
 
       await api
         .post('/api/blogs')
+        .set('Authorization', bearerToken)
         .send(newBlog)
         .expect(400)
     })
 
+    test('fails with status code 401 if token is not provided', async () => {
+      const newBlog = {
+        title: 'Test Blog',
+        author: 'Test Author',
+        url: 'http://www.testurl.com',
+        likes: 0
+      }
+
+      await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(401)
+
+      const blogsAtEnd = await helper.blogsInDb()
+      expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+
+      expect(blogsAtEnd).not.toContainEqual(expect.objectContaining(newBlog))
+    })
   })
 
   describe('deletion of a blog', () => {
@@ -122,6 +170,7 @@ describe('when there is initially some blogs saved', () => {
 
       await api
         .delete(`/api/blogs/${blogToDelete.id}`)
+        .set('Authorization', bearerToken)
         .expect(204)
 
       const blogsAtEnd = await helper.blogsInDb()
@@ -135,6 +184,7 @@ describe('when there is initially some blogs saved', () => {
 
       await api
         .delete(`/api/blogs/${validNonExistentId}`)
+        .set('Authorization', bearerToken)
         .expect(404)
     })
 
@@ -143,6 +193,7 @@ describe('when there is initially some blogs saved', () => {
 
       await api
         .delete(`/api/blogs/${invalidId}`)
+        .set('Authorization', bearerToken)
         .expect(400)
     })
   })
@@ -242,7 +293,7 @@ describe('when there is initially some blogs saved', () => {
   })
 })
 
-describe('when there is initially one user in db', () => {
+describe('Testing user routers', () => {
   beforeEach(async () => {
     await Blog.deleteMany({})
     await User.deleteMany({})
