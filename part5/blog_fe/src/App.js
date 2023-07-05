@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import LoggedUser from './components/LoggedUser'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -75,6 +76,11 @@ const App = () => {
     </form>
   )
 
+  const handleLogout = () => {
+    window.localStorage.removeItem('loggedBlogappUser')
+    setUser(null)
+  }
+
   return (
     <div>
       { !user && 
@@ -86,7 +92,7 @@ const App = () => {
       { user &&
         <div>
           <h2>blogs</h2>
-          <p>{user.name} logged in</p>
+          <LoggedUser user={user} handleLogout={handleLogout} />
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
           )}
