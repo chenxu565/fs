@@ -123,15 +123,6 @@ const App = () => {
     setTimeout(() => {
       setMessage(null)
     }, 5000)
-    // blogService
-    //   .create(blogObject)
-    //   .then(returnedBlog => {
-    //     console.log('returnedBlog', returnedBlog)
-    //     setBlogs(blogs.concat(returnedBlog))
-    //     setTitle('')
-    //     setAuthor('')
-    //     setUrl('')
-    //   })
   }
 
   const blogForm = () => (
