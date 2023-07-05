@@ -12,6 +12,9 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
   useEffect(() => {
     if (user) {
@@ -49,6 +52,7 @@ const App = () => {
         setUsername('')
         setPassword('')
       } catch (exception) {
+        console.log('wrong credentials')
         setErrorMessage('Wrong credentials')
         console.log('exception', exception)
         setTimeout(() => {
@@ -86,6 +90,59 @@ const App = () => {
     setUser(null)
   }
 
+  const addBlog = (event) => {
+    event.preventDefault()
+
+    const blogObject = {
+      title: title,
+      author: author,
+      url: url
+    }
+
+    blogService
+      .create(blogObject)
+      .then(returnedBlog => {
+        console.log('returnedBlog', returnedBlog)
+        setBlogs(blogs.concat(returnedBlog))
+        setTitle('')
+        setAuthor('')
+        setUrl('')
+      })
+  }
+
+  const blogForm = () => (
+    <form onSubmit={addBlog}>
+      <div>
+        title:
+        <input
+          type="text"
+          value={title}
+          name="Title"
+          onChange={({ target }) => setTitle(target.value)}
+        />
+      </div>
+      <div>
+        author:
+        <input
+          type="text"
+          value={author}
+          name="Author"
+          onChange={({ target }) => setAuthor(target.value)}
+        />
+      </div>
+      <div>
+        url:
+        <input
+          type="text"
+          value={url}
+          name="Url"
+          onChange={({ target }) => setUrl(target.value)}
+        />
+      </div>
+      <button type="submit">create</button>
+    </form>
+  )
+
   return (
     <div>
       { !user && 
@@ -98,6 +155,8 @@ const App = () => {
         <div>
           <h2>blogs</h2>
           <LoggedUser user={user} handleLogout={handleLogout} />
+          <h2>create new</h2>
+          {blogForm()}
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
           )}
