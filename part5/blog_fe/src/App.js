@@ -2,18 +2,14 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import LoggedUser from './components/LoggedUser'
-import blogService from './services/blogs'
-import loginService from './services/login'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
+import blogService from './services/blogs'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [message, setMessage] = useState(null)
   const [messageType, setMessageType] = useState('green')
-
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
   useEffect(() => {
@@ -38,50 +34,10 @@ const App = () => {
     }
   }, [])
 
-  const handleLogin = async (event) => {
-    event.preventDefault()
-    try {
-      const user = await loginService.login({
-        username, password,
-      })
-      blogService.setToken(user.token)
-      window.localStorage.setItem(
-        'loggedBlogappUser', JSON.stringify(user)
-      )
-      setUser(user)
-      setUsername('')
-      setPassword('')
-      setMessage('Logged in')
-      setMessageType('green')
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
-    } catch (exception) {
-      console.log('wrong credentials')
-      setMessage('wrong username or password')
-      setMessageType('red')
-      console.log('exception', exception)
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
-    }
-  }
-
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogappUser')
     setUser(null)
     setMessage('Logged out')
-    setMessageType('green')
-    setTimeout(() => {
-      setMessage(null)
-    }, 5000)
-  }
-
-  const addBlog = async (blogObject) => {
-    const returnedBlog = await blogService.create(blogObject)
-    console.log('returnedBlog', returnedBlog)
-    setBlogs(blogs.concat(returnedBlog))
-    setMessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`)
     setMessageType('green')
     setTimeout(() => {
       setMessage(null)
@@ -94,8 +50,7 @@ const App = () => {
         <div>
           <h2> log in to applicaiton</h2>
           <Notification message={message} messageType={messageType}/>
-          <LoginForm handleLogin={handleLogin} username={username} setUsername={setUsername} password={password} setPassword={setPassword} />
-        </div>
+          <LoginForm setUser={setUser} setMessage={setMessage} setMessageType={setMessageType} />        </div>
       }
       { user &&
         <div>
@@ -103,7 +58,12 @@ const App = () => {
           <Notification message={message} messageType={messageType} />
           <LoggedUser user={user} handleLogout={handleLogout} />
           <h2>create new</h2>
-          <BlogForm addBlog={addBlog} />
+          <BlogForm 
+            blogs={blogs} 
+            setBlogs={setBlogs} 
+            setMessage={setMessage} 
+            setMessageType={setMessageType}
+          />
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
           )}
