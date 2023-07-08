@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import LoggedUser from './components/LoggedUser'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 
 const App = () => {
@@ -11,6 +12,7 @@ const App = () => {
   const [message, setMessage] = useState(null)
   const [messageType, setMessageType] = useState('green')
   const [user, setUser] = useState(null)
+  const noteFormRef = useRef()
 
   useEffect(() => {
     if (user) {
@@ -57,13 +59,16 @@ const App = () => {
           <h2>blogs</h2>
           <Notification message={message} messageType={messageType} />
           <LoggedUser user={user} handleLogout={handleLogout} />
-          <h2>create new</h2>
-          <BlogForm 
-            blogs={blogs} 
-            setBlogs={setBlogs} 
-            setMessage={setMessage} 
-            setMessageType={setMessageType}
-          />
+          <Togglable buttonLabel="new blog" ref={noteFormRef}>
+            <h2>create new</h2>
+            <BlogForm 
+              blogs={blogs} 
+              setBlogs={setBlogs} 
+              setMessage={setMessage} 
+              setMessageType={setMessageType}
+              noteFormRef={noteFormRef}
+            />
+          </Togglable>
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
           )}
