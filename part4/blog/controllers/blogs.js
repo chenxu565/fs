@@ -34,10 +34,12 @@ blogsRouter.post('/', middleware.tokenExtractor,
     })
 
     const savedBlog = await blog.save()
-    user.blogs = user.blogs.concat(savedBlog._id)
+    const populatedBlog = await Blog.populate(savedBlog, { path: 'user', select: { username: 1 , name: 1, id: 1 } })
+
+    user.blogs = user.blogs.concat(populatedBlog._id)
     await user.save()
 
-    response.status(201).json(savedBlog)
+    response.status(201).json(populatedBlog)
   })
 
 blogsRouter.delete('/:id', middleware.tokenExtractor,
