@@ -18,6 +18,7 @@ const BlogForm = ({ blogs, setBlogs, setMessage, setMessageType, noteFormRef }) 
     try {
       noteFormRef.current.toggleVisibility()
       const returnedBlog = await blogService.create(blogObject)
+      console.log('returnedBlog', returnedBlog)
       setBlogs(blogs.concat(returnedBlog))
       setTitle('')
       setAuthor('')
