@@ -71,10 +71,10 @@ const App = () => {
   }
 
   const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes)
-  
+
   return (
     <div>
-      { !user && 
+      { !user &&
         <div>
           <h2> log in to applicaiton</h2>
           <Notification message={message} messageType={messageType}/>
@@ -87,18 +87,18 @@ const App = () => {
           <LoggedUser user={user} handleLogout={handleLogout} />
           <Togglable buttonLabel="new blog" ref={noteFormRef}>
             <h2>create new</h2>
-            <BlogForm 
-              blogs={blogs} 
-              setBlogs={setBlogs} 
-              setMessage={setMessage} 
+            <BlogForm
+              blogs={blogs}
+              setBlogs={setBlogs}
+              setMessage={setMessage}
               setMessageType={setMessageType}
               noteFormRef={noteFormRef}
             />
           </Togglable>
           {sortedBlogs.map(blog =>
-            <Blog key={blog.id} blog={blog} 
-            handleBlogUpdate={handleBlogUpdate}
-            handleBlogRemoval={handleBlogRemoval}/>
+            <Blog key={blog.id} blog={blog}
+              handleBlogUpdate={handleBlogUpdate}
+              handleBlogRemoval={handleBlogRemoval}/>
           )}
         </div>
       }

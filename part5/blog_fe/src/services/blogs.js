@@ -38,5 +38,4 @@ const remove = async (id) => {
   return response.data
 }
 
-// eslint-disable-next-line import/no-anonymous-default-export
 export default { setToken, getAll, create, update, remove }
