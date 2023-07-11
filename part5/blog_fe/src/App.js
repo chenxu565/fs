@@ -46,11 +46,25 @@ const App = () => {
     }, 5000)
   }
 
-  const handleUpdate = async (updatedBlog) => {
+  const handleBlogUpdate = async (updatedBlog) => {
     try {
       const returnedBlog = await blogService.update(updatedBlog.id, updatedBlog)
       console.log('returnedBlog', returnedBlog)
       setBlogs(blogs.map(blog => blog.id !== updatedBlog.id ? blog : returnedBlog))
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const handleBlogRemoval = async (id) => {
+    const blog = blogs.find(blog => blog.id === id)
+    const result = window.confirm(`Remove blog ${blog.title} by ${blog.author}`)
+    if (!result) {
+      return
+    }
+    try {
+      await blogService.remove(id)
+      setBlogs(blogs.filter(blog => blog.id !== id))
     } catch (error) {
       console.error(error)
     }
@@ -82,7 +96,9 @@ const App = () => {
             />
           </Togglable>
           {sortedBlogs.map(blog =>
-            <Blog key={blog.id} blog={blog} handleUpdate={handleUpdate}/>
+            <Blog key={blog.id} blog={blog} 
+            handleBlogUpdate={handleBlogUpdate}
+            handleBlogRemoval={handleBlogRemoval}/>
           )}
         </div>
       }

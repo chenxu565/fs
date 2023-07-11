@@ -1,6 +1,6 @@
 import {useState} from 'react'
 
-const Blog = ({blog, handleUpdate}) => {
+const Blog = ({blog, handleBlogUpdate, handleBlogRemoval}) => {
   const [visible, setVisible] = useState(false)
 
   const blogStyle = {
@@ -22,8 +22,8 @@ const Blog = ({blog, handleUpdate}) => {
       likes: blog.likes + 1,
       user: blog.user.id
     }
-    handleUpdate(updatedBlog)
-  }  
+    handleBlogUpdate(updatedBlog)
+  }
 
   return (
   <div style={blogStyle}>
@@ -38,6 +38,9 @@ const Blog = ({blog, handleUpdate}) => {
           likes {blog.likes} <button onClick={likeBlog}>like</button>
         </div>
         <div>{blog.user.name}</div>
+        { blog.user.username === JSON.parse(localStorage.getItem('loggedBlogappUser')).username
+          &&
+          <button onClick={() => handleBlogRemoval(blog.id)}>remove</button> }
       </div>
     }
   </div>
