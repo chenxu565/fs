@@ -45,6 +45,16 @@ const App = () => {
       setMessage(null)
     }, 5000)
   }
+
+  const handleUpdate = async (updatedBlog) => {
+    try {
+      const returnedBlog = await blogService.update(updatedBlog.id, updatedBlog)
+      console.log('returnedBlog', returnedBlog)
+      setBlogs(blogs.map(blog => blog.id !== updatedBlog.id ? blog : returnedBlog))
+    } catch (error) {
+      console.error(error)
+    }
+  }
   
   return (
     <div>
@@ -70,7 +80,7 @@ const App = () => {
             />
           </Togglable>
           {blogs.map(blog =>
-            <Blog key={blog.id} oneBlog={blog} />
+            <Blog key={blog.id} blog={blog} handleUpdate={handleUpdate}/>
           )}
         </div>
       }

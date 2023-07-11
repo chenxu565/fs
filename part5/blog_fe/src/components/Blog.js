@@ -1,9 +1,7 @@
 import {useState} from 'react'
-import blogService from '../services/blogs'
 
-const Blog = ({oneBlog}) => {
+const Blog = ({blog, handleUpdate}) => {
   const [visible, setVisible] = useState(false)
-  const [blog, setBlog] = useState(oneBlog)
 
   const blogStyle = {
     paddingTop: 10,
@@ -24,9 +22,7 @@ const Blog = ({oneBlog}) => {
       likes: blog.likes + 1,
       user: blog.user.id
     }
-    const returnedBlog = await blogService.update(blog.id, updatedBlog)
-    console.log(returnedBlog)
-    setBlog(returnedBlog)
+    handleUpdate(updatedBlog)
   }  
 
   return (
