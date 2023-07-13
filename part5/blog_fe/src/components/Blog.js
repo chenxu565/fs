@@ -16,7 +16,7 @@ const Blog = ({ blog, handleBlogUpdate, handleBlogRemoval }) => {
   }
 
   const likeBlog = async() => {
-    console.log('like')
+    // console.log('like')
     const updatedBlog = {
       ...blog,
       likes: blog.likes + 1,
