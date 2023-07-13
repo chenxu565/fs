@@ -70,6 +70,22 @@ const App = () => {
     }
   }
 
+  const handleAddBlog = async (blogObject) => {
+    try {
+      noteFormRef.current.toggleVisibility()
+      const returnedBlog = await blogService.create(blogObject)
+      console.log('returnedBlog', returnedBlog)
+      setBlogs(blogs.concat(returnedBlog))
+      setMessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`)
+      setMessageType('green')
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes)
 
   return (
@@ -87,13 +103,7 @@ const App = () => {
           <LoggedUser user={user} handleLogout={handleLogout} />
           <Togglable buttonLabel="new blog" ref={noteFormRef}>
             <h2>create new</h2>
-            <BlogForm
-              blogs={blogs}
-              setBlogs={setBlogs}
-              setMessage={setMessage}
-              setMessageType={setMessageType}
-              noteFormRef={noteFormRef}
-            />
+            <BlogForm handleAddBlog={handleAddBlog} />
           </Togglable>
           {sortedBlogs.map(blog =>
             <Blog key={blog.id} blog={blog}

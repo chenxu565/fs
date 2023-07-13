@@ -1,36 +1,22 @@
 import React, { useState } from 'react'
-import blogService from '../services/blogs'
 
-const BlogForm = ({ blogs, setBlogs, setMessage, setMessageType, noteFormRef }) => {
+const BlogForm = ({ handleAddBlog }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
-  const addBlog = async (event) => {
+  const addBlog = (event) => {
     event.preventDefault()
-
     const blogObject = {
       title,
       author,
       url
     }
 
-    try {
-      noteFormRef.current.toggleVisibility()
-      const returnedBlog = await blogService.create(blogObject)
-      console.log('returnedBlog', returnedBlog)
-      setBlogs(blogs.concat(returnedBlog))
-      setTitle('')
-      setAuthor('')
-      setUrl('')
-      setMessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`)
-      setMessageType('green')
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
-    } catch (error) {
-      console.error(error)
-    }
+    handleAddBlog(blogObject)
+    setTitle('')
+    setAuthor('')
+    setUrl('')
   }
 
   return (
@@ -41,6 +27,7 @@ const BlogForm = ({ blogs, setBlogs, setMessage, setMessageType, noteFormRef }) 
           type="text"
           value={title}
           name="Title"
+          // id="title"
           onChange={({ target }) => setTitle(target.value)}
         />
       </div>
@@ -50,6 +37,7 @@ const BlogForm = ({ blogs, setBlogs, setMessage, setMessageType, noteFormRef }) 
           type="text"
           value={author}
           name="Author"
+          // id="author"
           onChange={({ target }) => setAuthor(target.value)}
         />
       </div>
@@ -59,6 +47,7 @@ const BlogForm = ({ blogs, setBlogs, setMessage, setMessageType, noteFormRef }) 
           type="text"
           value={url}
           name="Url"
+          // id="url"
           onChange={({ target }) => setUrl(target.value)}
         />
       </div>
