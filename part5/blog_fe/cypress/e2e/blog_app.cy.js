@@ -73,5 +73,13 @@ describe('Blog app', function() {
       cy.get('.blog').should('have.length', 3)
         .and('contain', 'a blog created by cypress')
     })
+
+    // Make a test for liking a blog.
+    it('A blog can be liked', function() {
+      cy.contains('Second blog').parent().as('secondBlog')
+      cy.get('@secondBlog').contains('view').click()
+      cy.get('@secondBlog').contains('like').click()
+      cy.get('@secondBlog').contains('likes 1')
+    })
   })
 })
