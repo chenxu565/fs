@@ -1,5 +1,5 @@
 describe('Blog app', function() {
-  beforeEach(function() {
+  beforeEach( function() {
     // Reset the database before each test.
     cy.request('POST', `${Cypress.env('BACKEND')}/testing/reset`)
     // Visit the application's URL.
@@ -40,6 +40,38 @@ describe('Blog app', function() {
       cy.get('.msg').should('contain', 'wrong username or password')
         .and('have.css', 'color', 'rgb(255, 0, 0)')
       cy.get('html').should('not.contain', 'Matti Luukkainen logged in')
+    })
+  })
+  // Make a test for creating a new blog.
+  describe('When logged in', function() {
+    beforeEach(function() {
+      cy.login({ username: 'mluukkai', password: 'salainen' })
+      // Create two blogs for each test.
+      const blog1 = {
+        title: 'First blog',
+        author: 'Rob Martin',
+        url: 'http://firstclasstests.com',
+      }
+      const blog2 = {
+        title: 'Second blog',
+        author: 'Peter Parker',
+        url: 'http://secondclasstests.com',
+      }
+      cy.createBlog(blog1)
+      cy.createBlog(blog2)
+    })
+
+    it('A blog can be created', function() {
+      cy.contains('new blog').click()
+      cy.get('#title').type('a blog created by cypress')
+      cy.get('#author').type('cypress')
+      cy.get('#url').type('https://docs.cypress.io')
+      cy.get('#create-button').click()
+      cy.contains('a blog created by cypress')
+
+      // Check that the blog is displayed in the list of blogs.
+      cy.get('.blog').should('have.length', 3)
+        .and('contain', 'a blog created by cypress')
     })
   })
 })
