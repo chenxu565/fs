@@ -71,7 +71,8 @@ blogsRouter.put('/:id', async (request, response) => {
     { new: true, runValidators: true, context: 'query' })
     .orFail(new Error('BlogNotFound'))
   // console.log(updatedBlog)
-  response.json(updatedBlog)
+  const populatedBlog = await Blog.populate(updatedBlog, { path: 'user', select: { username: 1 , name: 1, id: 1 } })
+  response.json(populatedBlog)
 })
 
 module.exports = blogsRouter
