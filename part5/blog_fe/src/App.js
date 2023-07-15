@@ -92,7 +92,7 @@ const App = () => {
     <div>
       { !user &&
         <div>
-          <h2> log in to applicaiton</h2>
+          <h2> log in to application</h2>
           <Notification message={message} messageType={messageType}/>
           <LoginForm setUser={setUser} setMessage={setMessage} setMessageType={setMessageType} />        </div>
       }
