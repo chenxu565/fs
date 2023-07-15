@@ -113,5 +113,38 @@ describe('Blog app', function() {
       cy.get('@secondBlog').contains('view').click()
       cy.get('@secondBlog').should('not.contain', 'remove')
     })
+
+    // Make a test for checking that the blogs are ordered according to likes with the blog with the most likes being first.
+    it('Blogs are ordered according to likes', function() {
+      // Like the second blog once.
+      cy.contains('Second blog').parent().as('secondBlog')
+      cy.get('@secondBlog').contains('view').click()
+      cy.get('@secondBlog').contains('like').click()
+
+      // Wait for 1 second.
+      cy.wait(1000)
+
+      // Blogs should now be sorted by likes in descending order
+      cy.get('.blog').then(blogs => {
+        cy.wrap(blogs[0]).contains('Second blog')
+        cy.wrap(blogs[1]).contains('First blog')
+      })
+
+      // Like the first blog twice.
+      cy.contains('First blog').parent().as('firstBlog')
+      cy.get('@firstBlog').contains('view').click()
+      cy.get('@firstBlog').contains('like').click()
+      cy.get('@firstBlog').contains('like').click()
+
+      // Wait for 1 second.
+      cy.wait(1000)
+
+      // Blogs should now be sorted by likes in descending order
+      cy.get('.blog').then(blogs => {
+        cy.wrap(blogs[0]).contains('First blog')
+        cy.wrap(blogs[1]).contains('Second blog')
+      })
+    })
+
   })
 })
