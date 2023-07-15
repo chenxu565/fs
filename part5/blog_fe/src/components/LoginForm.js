@@ -45,6 +45,7 @@ const LoginForm = ({ setUser, setMessage, setMessageType }) => {
           type="text"
           value={username}
           name="Username"
+          id='username'
           onChange={({ target }) => setUsername(target.value)}
         />
       </div>
@@ -54,6 +55,7 @@ const LoginForm = ({ setUser, setMessage, setMessageType }) => {
           type="password"
           value={password}
           name="Password"
+          id='password'
           onChange={({ target }) => setPassword(target.value)}
         />
       </div>
