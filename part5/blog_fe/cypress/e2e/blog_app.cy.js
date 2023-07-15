@@ -61,6 +61,7 @@ describe('Blog app', function() {
       cy.createBlog(blog2)
     })
 
+    // Make a test for creating a new blog.
     it('A blog can be created', function() {
       cy.contains('new blog').click()
       cy.get('#title').type('a blog created by cypress')
@@ -80,6 +81,37 @@ describe('Blog app', function() {
       cy.get('@secondBlog').contains('view').click()
       cy.get('@secondBlog').contains('like').click()
       cy.get('@secondBlog').contains('likes 1')
+    })
+
+    // Make a test for deleting a blog.
+    it('A blog can be deleted', function() {
+      cy.contains('Second blog').parent().as('secondBlog')
+      cy.get('@secondBlog').contains('view').click()
+      cy.get('@secondBlog').contains('remove').click()
+      cy.get('html').should('not.contain', 'Second blog')
+    })
+
+    // Make a test for checking that only the creator can see the delete button of a blog, not anyone else.
+    it('Only creator can see the delete button of a blog', function() {
+      cy.contains('Second blog').parent().as('secondBlog')
+      cy.get('@secondBlog').contains('view').click()
+      cy.get('@secondBlog').should('contain', 'remove')
+      // Logout the user.
+      cy.contains('logout').click()
+
+      // Login with another user.
+      const user = {
+        name: 'Ohter User',
+        username: 'other',
+        password: 'secret'
+      }
+      cy.request('POST', `${Cypress.env('BACKEND')}/users`, user)
+      cy.login({ username: 'other', password: 'secret' })
+
+      // Check that the delete button is not visible.
+      cy.contains('Second blog').parent().as('secondBlog')
+      cy.get('@secondBlog').contains('view').click()
+      cy.get('@secondBlog').should('not.contain', 'remove')
     })
   })
 })
