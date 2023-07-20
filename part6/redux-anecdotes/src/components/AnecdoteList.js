@@ -18,10 +18,11 @@ const Anecdote = ({ anecdote, handleClick }) => {
 const AnecdoteList = () => {
   const anecdotes = useSelector(state => state.anecdotes)
   const filter = useSelector(state => state.filter)
+  console.log('anecdotes', anecdotes)
   console.log('filter', filter)
   const dispatch = useDispatch()
 
-  const sortedAnecdotes = anecdotes.sort((a, b) => b.votes - a.votes)
+  const sortedAnecdotes = [...anecdotes].sort((a, b) => b.votes - a.votes)
 
   const filteredAnecdotes = 
     filter === '' ? sortedAnecdotes :
