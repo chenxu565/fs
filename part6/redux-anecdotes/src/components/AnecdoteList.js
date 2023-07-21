@@ -33,11 +33,7 @@ const AnecdoteList = () => {
     console.log('vote', id)
     dispatch(voteAnecdote(id))
     const anecdote = anecdotes.find(anecdote => anecdote.id === id)
-    const notification = {
-      message: `you voted '${anecdote.content}'`,
-      type: 'success'
-    }
-    dispatch(setNotification(notification))
+    dispatch(setNotification(`you voted '${anecdote.content}'`))
     setTimeout(() => {
       dispatch(clearNotification())
     }

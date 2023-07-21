@@ -7,13 +7,13 @@ const Notification = () => {
     borderWidth: 1
   }
   const notification = useSelector(state => state.notification)
-  if (notification.message === '') {
+  if (notification === '') {
     return null
   }
   return (
     <div style={style}>
       {/* render here notification... */}
-      {notification.message}
+      {notification}
     </div>
   )
 }
