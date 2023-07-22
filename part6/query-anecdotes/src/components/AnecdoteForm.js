@@ -1,10 +1,11 @@
-const AnecdoteForm = () => {
+const AnecdoteForm = ({createAnecdoteMutation}) => {
 
-  const onCreate = (event) => {
+  const onCreate = async (event) => {
     event.preventDefault()
     const content = event.target.anecdote.value
     event.target.anecdote.value = ''
     console.log('new anecdote')
+    createAnecdoteMutation.mutate({ content, votes: 0 })
 }
 
   return (
