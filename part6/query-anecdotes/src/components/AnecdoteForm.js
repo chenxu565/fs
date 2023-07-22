@@ -1,4 +1,7 @@
+import { useNoticeDispatch } from "../NoticeContext"
+
 const AnecdoteForm = ({createAnecdoteMutation}) => {
+  const noticeDispatch = useNoticeDispatch()
 
   const onCreate = async (event) => {
     event.preventDefault()
@@ -6,6 +9,11 @@ const AnecdoteForm = ({createAnecdoteMutation}) => {
     event.target.anecdote.value = ''
     console.log('new anecdote')
     createAnecdoteMutation.mutate({ content, votes: 0 })
+    noticeDispatch({type: 'SET_NOTICE', payload: `anecdote '${content}' created`})
+    setTimeout(() => {
+      noticeDispatch({type: 'CLEAR_NOTICE'})
+    }
+    , 5000)
 }
 
   return (
