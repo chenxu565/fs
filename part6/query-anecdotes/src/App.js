@@ -15,6 +15,11 @@ const App = () => {
     },
     onError: (error) => {
       console.log(error)
+      noticeDispatch({type: 'SET_NOTICE', payload: error.response.data.error})
+      setTimeout(() => {
+        noticeDispatch({type: 'CLEAR_NOTICE'})
+      }
+      , 5000)
     }
   })
 
