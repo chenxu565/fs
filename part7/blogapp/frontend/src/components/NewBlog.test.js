@@ -1,6 +1,6 @@
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
-import { render, screen, act } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import NewBlog from './NewBlog'
@@ -19,16 +19,16 @@ describe('NewBlog', () => {
     const user = userEvent.setup()
 
     const titleInput = screen.getByPlaceholderText('title')
-    const authorInput = screen.getByPlaceholderText('author')
-    const urlInput = screen.getByPlaceholderText('url')
-    const showButton = screen.getByText('create')
+    await user.type(titleInput, input.title)
 
-    await act(async() => {
-      await user.type(titleInput, input.title)
-      await user.type(authorInput, input.author)
-      await user.type(urlInput, input.url)
-      await user.click(showButton)
-    })
+    const authorInput = screen.getByPlaceholderText('author')
+    await user.type(authorInput, input.author)
+
+    const urlInput = screen.getByPlaceholderText('url')
+    await user.type(urlInput, input.url)
+
+    const showButton = screen.getByText('create')
+    await user.click(showButton)
 
     const calls = createHandler.mock.calls
 
