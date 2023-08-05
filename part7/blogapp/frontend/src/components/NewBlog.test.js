@@ -2,19 +2,59 @@ import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { Provider } from 'react-redux'
+import configureMockStore from 'redux-mock-store'
+import thunk from 'redux-thunk'
+import axios from 'axios'
 
 import NewBlog from './NewBlog'
 
-describe('NewBlog', () => {
-  test('if liked twice, ', async () => {
-    const createHandler = jest.fn()
-    render(<NewBlog createBlog={createHandler} />)
+// Include thunk in the middlewares array
+const middlewares = [thunk]
+const mockStore = configureMockStore(middlewares)
 
-    const input = {
-      title: 'Goto considered useful',
-      author: 'Edsger Dijkstra',
-      url: 'acm.com/goto',
+jest.mock('axios')
+
+describe('For NewBlog', () => {
+  const input = {
+    title: 'Goto considered useful',
+    author: 'Edsger Dijkstra',
+    url: 'acm.com/goto',
+  }
+
+  let store
+
+  beforeEach(() => {
+    axios.post = jest.fn().mockResolvedValue({
+      data: {
+        title: 'Goto considered useful',
+        author: 'Edsger Dijkstra',
+        url: 'acm.com/goto',
+      },
+    })
+
+    store = mockStore({
+      storageUser: {
+        username: 'testUser',
+      },
+      blogs: [],
+      notification: null,
+    })
+
+    const mockRef = {
+      current: {
+        toggleVisibility: jest.fn(),
+      },
     }
+    render(
+      <Provider store={store}>
+        <NewBlog blogFormRef={mockRef} />
+      </Provider>,
+    )
+  })
+
+  test('Adding a new blog should invoke action', async () => {
+    store.clearActions()
 
     const user = userEvent.setup()
 
@@ -30,9 +70,16 @@ describe('NewBlog', () => {
     const showButton = screen.getByText('create')
     await user.click(showButton)
 
-    const calls = createHandler.mock.calls
+    const actions = store.getActions()
 
-    expect(calls).toHaveLength(1)
-    expect(calls[0][0]).toEqual(input)
+    expect(actions).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ type: 'blogs/addBlog' }),
+      ]),
+    )
+  })
+
+  afterEach(() => {
+    jest.restoreAllMocks()
   })
 })
