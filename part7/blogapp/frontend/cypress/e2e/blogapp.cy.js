@@ -111,20 +111,24 @@ describe('Blog app', function () {
       cy.contains(blogs[2].title).contains('like').as('like2')
 
       cy.get('@like2').click()
+      cy.wait(300)
       cy.contains(blogs[2].title).contains('likes 1')
       cy.get('@like2').click()
-      cy.contains(blogs[2].title).contains('likes 1')
-      cy.get('@like2').click()
+      cy.wait(300)
       cy.contains(blogs[2].title).contains('likes 2')
       cy.get('@like2').click()
+      cy.wait(300)
       cy.contains(blogs[2].title).contains('likes 3')
 
       cy.get('@like1').click()
+      cy.wait(300)
       cy.contains(blogs[1].title).contains('likes 1')
       cy.get('@like1').click()
+      cy.wait(300)
       cy.contains(blogs[1].title).contains('likes 2')
 
       cy.get('@like0').click()
+      cy.wait(300)
       cy.contains(blogs[0].title).contains('likes 1')
 
       cy.get('.blog').eq(0).should('contain', blogs[2].title)

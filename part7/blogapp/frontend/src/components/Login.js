@@ -1,12 +1,24 @@
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { notifyWith } from '../reducers/noticeReducer'
+import loginService from '../services/login'
+import { setStorageUser } from '../reducers/storageReducer'
 
-const LoginForm = ({ login }) => {
+const LoginForm = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const dispatch = useDispatch()
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    await login(username, password)
+    try {
+      const user = await loginService.login({ username, password })
+      dispatch(setStorageUser(user))
+      dispatch(notifyWith('welcome!'))
+    } catch (e) {
+      dispatch(notifyWith('wrong username or password', 'error'))
+      console.log(e)
+    }
   }
 
   return (
