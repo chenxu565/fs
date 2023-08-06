@@ -1,4 +1,7 @@
-const Notification = ({ info }) => {
+import { useStoreValue } from '../StoreContext'
+
+const Notification = () => {
+  const info = useStoreValue().notice
   if (!info.message) {
     return
   }

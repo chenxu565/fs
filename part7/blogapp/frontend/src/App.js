@@ -9,12 +9,14 @@ import NewBlog from './components/NewBlog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 
+import { useNotifyWith } from './StoreContext'
+
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState('')
-  const [info, setInfo] = useState({ message: null })
 
   const blogFormRef = useRef()
+  const notifyWith = useNotifyWith()
 
   useEffect(() => {
     const user = storageService.loadUser()
@@ -24,17 +26,6 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
   }, [])
-
-  const notifyWith = (message, type = 'info') => {
-    setInfo({
-      message,
-      type,
-    })
-
-    setTimeout(() => {
-      setInfo({ message: null })
-    }, 3000)
-  }
 
   const login = async (username, password) => {
     try {
@@ -82,7 +73,7 @@ const App = () => {
     return (
       <div>
         <h2>log in to application</h2>
-        <Notification info={info} />
+        <Notification />
         <LoginForm login={login} />
       </div>
     )
@@ -93,7 +84,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      <Notification info={info} />
+      <Notification />
       <div>
         {user.name} logged in
         <button onClick={logout}>logout</button>
