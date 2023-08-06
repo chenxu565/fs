@@ -1,3 +1,4 @@
+import { useQuery, useMutation, useQueryClient } from 'react-query'
 import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
@@ -12,7 +13,7 @@ import Togglable from './components/Togglable'
 import { useNotifyWith } from './StoreContext'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
+  const queryClient = useQueryClient()
   const [user, setUser] = useState('')
 
   const blogFormRef = useRef()
@@ -21,11 +22,20 @@ const App = () => {
   useEffect(() => {
     const user = storageService.loadUser()
     setUser(user)
+    console.log(user)
   }, [])
 
-  useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs))
-  }, [])
+  const createBlogMutation = useMutation(blogService.createBlog, {
+    onSuccess: (newBlog) => {
+      queryClient.getQueryData('blogs')
+      queryClient.setQueryData('blogs', blogs.concat(newBlog))
+      notifyWith(`A new blog '${newBlog.title}' by '${newBlog.author}' added`)
+      blogFormRef.current.toggleVisibility()
+    },
+    onError: (error) => {
+      console.log(error)
+    },
+  })
 
   const login = async (username, password) => {
     try {
@@ -44,30 +54,26 @@ const App = () => {
     notifyWith('logged out')
   }
 
-  const createBlog = async (newBlog) => {
-    const createdBlog = await blogService.create(newBlog)
-    notifyWith(`A new blog '${newBlog.title}' by '${newBlog.author}' added`)
-    setBlogs(blogs.concat(createdBlog))
-    blogFormRef.current.toggleVisibility()
-  }
-
   const like = async (blog) => {
-    const blogToUpdate = { ...blog, likes: blog.likes + 1, user: blog.user.id }
-    const updatedBlog = await blogService.update(blogToUpdate)
-    notifyWith(`A like for the blog '${blog.title}' by '${blog.author}'`)
-    setBlogs(blogs.map((b) => (b.id === blog.id ? updatedBlog : b)))
+    console.log(blog)
   }
 
   const remove = async (blog) => {
-    const ok = window.confirm(
-      `Sure you want to remove '${blog.title}' by ${blog.author}`,
-    )
-    if (ok) {
-      await blogService.remove(blog.id)
-      notifyWith(`The blog' ${blog.title}' by '${blog.author} removed`)
-      setBlogs(blogs.filter((b) => b.id !== blog.id))
-    }
+    console.log(blog)
   }
+
+  const {
+    isLoading,
+    isError,
+    isSuccess,
+    data: blogs,
+  } = useQuery('blogs', blogService.getAllBlogs, {
+    retry: 1,
+    refetchOnWindowFocus: false,
+    enabled: !!user, // query will not run until user is truthy
+  })
+
+  const byLikes = (b1, b2) => b2.likes - b1.likes
 
   if (!user) {
     return (
@@ -79,32 +85,36 @@ const App = () => {
     )
   }
 
-  const byLikes = (b1, b2) => b2.likes - b1.likes
-
-  return (
-    <div>
-      <h2>blogs</h2>
-      <Notification />
+  if (isLoading) {
+    return <div>Loading...</div>
+  } else if (isError) {
+    return <div>Error: {isError.message}</div>
+  } else if (isSuccess) {
+    return (
       <div>
-        {user.name} logged in
-        <button onClick={logout}>logout</button>
+        <h2>blogs</h2>
+        <Notification />
+        <div>
+          {user.name} logged in
+          <button onClick={logout}>logout</button>
+        </div>
+        <Togglable buttonLabel="new note" ref={blogFormRef}>
+          <NewBlog createBlogMutation={createBlogMutation} />
+        </Togglable>
+        <div>
+          {[...blogs].sort(byLikes).map((blog) => (
+            <Blog
+              key={blog.id}
+              blog={blog}
+              like={() => like(blog)}
+              canRemove={user && blog.user.username === user.username}
+              remove={() => remove(blog)}
+            />
+          ))}
+        </div>
       </div>
-      <Togglable buttonLabel="new note" ref={blogFormRef}>
-        <NewBlog createBlog={createBlog} />
-      </Togglable>
-      <div>
-        {blogs.sort(byLikes).map((blog) => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            like={() => like(blog)}
-            canRemove={user && blog.user.username === user.username}
-            remove={() => remove(blog)}
-          />
-        ))}
-      </div>
-    </div>
-  )
+    )
+  }
 }
 
 export default App

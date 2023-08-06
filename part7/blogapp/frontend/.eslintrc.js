@@ -19,7 +19,7 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module',
   },
-  plugins: ['react', 'jest', 'cypress', 'prettier'],
+  plugins: ['react', 'react-hooks', 'jest', 'cypress', 'prettier'],
   rules: {
     'linebreak-style': ['error', 'unix'],
     quotes: ['error', 'single'],
@@ -32,6 +32,8 @@ module.exports = {
     'react/prop-types': 0,
     'react/react-in-jsx-scope': 'off',
     'prettier/prettier': 'error', // This line ensures Prettier issues are reported as errors.
+    'react-hooks/rules-of-hooks': 'error', // Checks rules of Hooks
+    'react-hooks/exhaustive-deps': 'warn', // Checks effect dependencies
   },
   settings: {
     react: {
