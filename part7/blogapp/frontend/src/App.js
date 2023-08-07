@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from 'react-query'
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -10,20 +10,27 @@ import NewBlog from './components/NewBlog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 
-import { useNotifyWith } from './StoreContext'
+import {
+  useNotifyWith,
+  useSetStorageUser,
+  useClearStorageUser,
+} from './StoreContext'
+import { useStoreValue } from './StoreContext'
 
 const App = () => {
   const queryClient = useQueryClient()
-  const [user, setUser] = useState('')
+  const setStorageUser = useSetStorageUser()
+  const clearStorageUser = useClearStorageUser()
+  const { storageUser: user } = useStoreValue()
 
   const blogFormRef = useRef()
   const notifyWith = useNotifyWith()
 
   useEffect(() => {
     const user = storageService.loadUser()
-    setUser(user)
+    setStorageUser(user)
     // console.log(user)
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const createBlogMutation = useMutation(blogService.createBlog, {
     onSuccess: (newBlog) => {
@@ -44,7 +51,7 @@ const App = () => {
         'blogs',
         blogs.map((blog) => (blog.id !== updatedBlog.id ? blog : updatedBlog)),
       )
-      notifyWith(`Blog '${updatedBlog.title}' updated`)
+      // notifyWith(`Blog '${updatedBlog.title}' updated`)
     },
     onError: (error) => {
       console.log(error)
@@ -68,7 +75,7 @@ const App = () => {
   const login = async (username, password) => {
     try {
       const user = await loginService.login({ username, password })
-      setUser(user)
+      setStorageUser(user)
       storageService.saveUser(user)
       notifyWith('welcome!')
     } catch (e) {
@@ -77,7 +84,7 @@ const App = () => {
   }
 
   const logout = async () => {
-    setUser(null)
+    clearStorageUser()
     storageService.removeUser()
     notifyWith('logged out')
   }
@@ -86,6 +93,7 @@ const App = () => {
     // console.log(blog)
     const updatedBlog = { ...blog, likes: blog.likes + 1 }
     updateBlogMutation.mutate(updatedBlog)
+    notifyWith(`Blog '${updatedBlog.title}' liked`)
   }
 
   const remove = async (blog) => {

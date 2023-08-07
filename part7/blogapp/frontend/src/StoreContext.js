@@ -2,6 +2,7 @@ import { createContext, useContext, useReducer } from 'react'
 
 const initialState = {
   notice: { message: null, type: null },
+  storageUser: null,
 }
 
 const storeReducer = (state, action) => {
@@ -10,6 +11,10 @@ const storeReducer = (state, action) => {
       return { ...state, notice: action.payload }
     case 'CLEAR_NOTICE':
       return { ...state, notice: { message: null, type: null } }
+    case 'SET_STORAGE_USER':
+      return { ...state, storageUser: action.payload }
+    case 'CLEAR_STORAGE_USER':
+      return { ...state, storageUser: null }
     default:
       return state
   }
@@ -43,6 +48,20 @@ export const useNotifyWith = () => {
     setTimeout(() => {
       dispatch({ type: 'CLEAR_NOTICE' })
     }, 3000)
+  }
+}
+
+export const useSetStorageUser = () => {
+  const dispatch = useStoreDispatch()
+  return (user) => {
+    dispatch({ type: 'SET_STORAGE_USER', payload: user })
+  }
+}
+
+export const useClearStorageUser = () => {
+  const dispatch = useStoreDispatch()
+  return () => {
+    dispatch({ type: 'CLEAR_STORAGE_USER' })
   }
 }
 
