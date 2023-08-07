@@ -2,7 +2,7 @@ import { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { notifyWith } from '../reducers/noticeReducer'
-import { likeBlog, removeBlog } from '../reducers/blogReducer'
+import { likeBlog, deleteBlog } from '../reducers/blogReducer'
 
 const Blog = ({ blog }) => {
   const [visible, setVisible] = useState(false)
@@ -29,7 +29,7 @@ const Blog = ({ blog }) => {
     if (!ok) {
       return
     }
-    dispatch(removeBlog(blog.id))
+    dispatch(deleteBlog(blog.id))
     dispatch(
       notifyWith(`The blog '${blog.title}' by '${blog.author}' was removed`),
     )
