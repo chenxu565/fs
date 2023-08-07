@@ -51,7 +51,6 @@ const App = () => {
         'blogs',
         blogs.map((blog) => (blog.id !== updatedBlog.id ? blog : updatedBlog)),
       )
-      // notifyWith(`Blog '${updatedBlog.title}' updated`)
     },
     onError: (error) => {
       console.log(error)
@@ -92,8 +91,11 @@ const App = () => {
   const like = async (blog) => {
     // console.log(blog)
     const updatedBlog = { ...blog, likes: blog.likes + 1 }
-    updateBlogMutation.mutate(updatedBlog)
-    notifyWith(`Blog '${updatedBlog.title}' liked`)
+    updateBlogMutation.mutate(updatedBlog, {
+      onSuccess: () => {
+        notifyWith(`Blog '${updatedBlog.title}' liked`)
+      },
+    })
   }
 
   const remove = async (blog) => {
