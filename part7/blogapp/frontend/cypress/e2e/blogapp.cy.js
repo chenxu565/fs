@@ -42,7 +42,7 @@ describe('Blog app', function () {
     })
 
     it('A blog can be created', function () {
-      cy.contains('new note').click()
+      cy.contains('new blog').click()
       cy.get('#title').type('You’re NOT gonna need it!')
       cy.get('#author').type('Ron Jeffries')
       cy.get('#url').type(
@@ -110,8 +110,8 @@ describe('Blog app', function () {
       cy.contains(blogs[2].title).contains('show').click()
       cy.contains(blogs[2].title).contains('like').as('like2')
 
-      cy.get('@like2').click()
-      cy.contains(blogs[2].title).contains('likes 1')
+      // cy.get('@like2').click()
+      // cy.contains(blogs[2].title).contains('likes 1')
       cy.get('@like2').click()
       cy.contains(blogs[2].title).contains('likes 1')
       cy.get('@like2').click()

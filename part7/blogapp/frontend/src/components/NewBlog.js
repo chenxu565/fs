@@ -1,12 +1,32 @@
 import { useState } from 'react'
+import { useMutation, useQueryClient } from 'react-query'
+import blogService from '../services/blogs'
+import { useNotifyWith } from '../StoreContext'
 
-const BlogForm = ({ createBlogMutation }) => {
+const BlogForm = ({ blogFormRef }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const queryClient = useQueryClient()
+  const notifyWith = useNotifyWith()
+
+  const createBlogMutation = useMutation(blogService.createBlog, {
+    onSuccess: (newBlog) => {
+      const blogs = queryClient.getQueryData('blogs')
+      console.log(blogs)
+      console.log(newBlog)
+      queryClient.setQueryData('blogs', blogs.concat(newBlog))
+      notifyWith(`A new blog '${newBlog.title}' by '${newBlog.author}' added`)
+      blogFormRef.current.toggleVisibility()
+    },
+    onError: (error) => {
+      console.log(error)
+    },
+  })
 
   const handleSubmit = async (event) => {
     event.preventDefault()
+    console.log('create new blog', title, author, url)
     createBlogMutation.mutate({ title, author, url })
   }
 

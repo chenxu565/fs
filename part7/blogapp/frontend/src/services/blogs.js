@@ -4,9 +4,11 @@ const baseUrl = '/api/blogs'
 
 const getHeaders = () => {
   const user = storageService.loadUser()
+  console.log('getHeader , user', user)
   const headers = {
     Authorization: user ? `Bearer ${user.token}` : null,
   }
+  console.log('getHeader , headers', headers)
   return headers
 }
 

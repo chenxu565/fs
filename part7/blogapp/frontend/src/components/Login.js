@@ -1,12 +1,28 @@
 import { useState } from 'react'
+import { useSetStorageUser, useNotifyWith } from '../StoreContext'
+import loginService from '../services/login'
+import storageService from '../services/storage'
 
-const LoginForm = ({ login }) => {
+const LoginForm = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const setStorageUser = useSetStorageUser()
+  const notifyWith = useNotifyWith()
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    await login(username, password)
+    try {
+      const user = await loginService.login({ username, password })
+      setStorageUser(user)
+      storageService.saveUser(user)
+      notifyWith('welcome!')
+    } catch (e) {
+      if (e.response.status === 401) {
+        notifyWith('wrong username or password', 'error')
+      } else {
+        notifyWith('something went wrong', 'error')
+      }
+    }
   }
 
   return (

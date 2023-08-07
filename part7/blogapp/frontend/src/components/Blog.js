@@ -1,8 +1,62 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
+import { useMutation, useQueryClient } from 'react-query'
+import blogService from '../services/blogs'
+import { useNotifyWith, useStoreValue } from '../StoreContext'
+import storageService from '../services/storage'
 
-const Blog = ({ blog, like, canRemove, remove }) => {
+const Blog = ({ blog }) => {
   const [visible, setVisible] = useState(false)
+  const queryClient = useQueryClient()
+  const notifyWith = useNotifyWith()
+  const { storageUser: user } = useStoreValue()
+  const chromeUser = storageService.loadUser()
+
+  const canRemove = user && user.username === blog.user.username
+
+  const updateBlogMutation = useMutation(blogService.updateBlog, {
+    onSuccess: (updatedBlog) => {
+      const blogs = queryClient.getQueryData('blogs')
+      queryClient.setQueryData(
+        'blogs',
+        blogs.map((blog) => (blog.id !== updatedBlog.id ? blog : updatedBlog)),
+      )
+    },
+    onError: (error) => {
+      console.log(error)
+    },
+  })
+
+  const deleteBlogMutation = useMutation(blogService.removeBlog, {
+    onSuccess: (deletedBlog) => {
+      const blogs = queryClient.getQueryData('blogs')
+      queryClient.setQueryData(
+        'blogs',
+        blogs.filter((blog) => blog.id !== deletedBlog.id),
+      )
+      notifyWith(`Blog '${deletedBlog.title}' removed`)
+    },
+    onError: (error) => {
+      console.log(error)
+    },
+  })
+
+  const like = async () => {
+    const updatedBlog = { ...blog, likes: blog.likes + 1 }
+    updateBlogMutation.mutate(updatedBlog, {
+      onSuccess: () => {
+        notifyWith(`Blog '${updatedBlog.title}' liked`)
+      },
+    })
+  }
+
+  const remove = async () => {
+    console.log('remove, user', user)
+    console.log('remove, chromeUser', chromeUser)
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+      deleteBlogMutation.mutate(blog)
+    }
+  }
 
   const style = {
     marginBottom: 2,
@@ -34,9 +88,6 @@ const Blog = ({ blog, like, canRemove, remove }) => {
 }
 
 Blog.propTypes = {
-  like: PropTypes.func.isRequired,
-  remove: PropTypes.func.isRequired,
-  canRemove: PropTypes.bool,
   blog: PropTypes.shape({
     title: PropTypes.string,
     author: PropTypes.string,
