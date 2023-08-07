@@ -22,7 +22,7 @@ const App = () => {
   useEffect(() => {
     const user = storageService.loadUser()
     setUser(user)
-    console.log(user)
+    // console.log(user)
   }, [])
 
   const createBlogMutation = useMutation(blogService.createBlog, {
@@ -31,6 +31,34 @@ const App = () => {
       queryClient.setQueryData('blogs', blogs.concat(newBlog))
       notifyWith(`A new blog '${newBlog.title}' by '${newBlog.author}' added`)
       blogFormRef.current.toggleVisibility()
+    },
+    onError: (error) => {
+      console.log(error)
+    },
+  })
+
+  const updateBlogMutation = useMutation(blogService.updateBlog, {
+    onSuccess: (updatedBlog) => {
+      queryClient.getQueryData('blogs')
+      queryClient.setQueryData(
+        'blogs',
+        blogs.map((blog) => (blog.id !== updatedBlog.id ? blog : updatedBlog)),
+      )
+      notifyWith(`Blog '${updatedBlog.title}' updated`)
+    },
+    onError: (error) => {
+      console.log(error)
+    },
+  })
+
+  const deleteBlogMutation = useMutation(blogService.removeBlog, {
+    onSuccess: (deletedBlog) => {
+      queryClient.getQueryData('blogs')
+      queryClient.setQueryData(
+        'blogs',
+        blogs.filter((blog) => blog.id !== deletedBlog.id),
+      )
+      notifyWith(`Blog '${deletedBlog.title}' deleted`)
     },
     onError: (error) => {
       console.log(error)
@@ -55,11 +83,17 @@ const App = () => {
   }
 
   const like = async (blog) => {
-    console.log(blog)
+    // console.log(blog)
+    const updatedBlog = { ...blog, likes: blog.likes + 1 }
+    updateBlogMutation.mutate(updatedBlog)
   }
 
   const remove = async (blog) => {
-    console.log(blog)
+    // console.log(blog)
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+      // console.log('user is ok to remove')
+      deleteBlogMutation.mutate(blog)
+    }
   }
 
   const {

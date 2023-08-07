@@ -27,8 +27,13 @@ const updateBlog = async (object) => {
   return request.data
 }
 
-const removeBlog = async (id) => {
-  await axios.delete(`${baseUrl}/${id}`, { headers: getHeaders() })
+const removeBlog = async (blog) => {
+  const id = blog.id
+  const res = await axios.delete(`${baseUrl}/${id}`, { headers: getHeaders() })
+  if (res.status !== 204) {
+    throw new Error('Error deleting blog')
+  }
+  return blog
 }
 
 export default { getAllBlogs, createBlog, updateBlog, removeBlog }
