@@ -1,7 +1,16 @@
 import React from 'react'
+import { QueryClient, QueryClientProvider } from 'react-query'
+import { StoreContextProvider } from '../StoreContext'
 import '@testing-library/jest-dom/extend-expect'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import blogService from '../services/blogs'
+
+jest.mock('../services/blogs', () => ({
+  ...jest.requireActual('../services/blogs'), // if there are other functions to keep intact
+  updateBlog: jest.fn(),
+  removeBlog: jest.fn(),
+}))
 
 import Blog from './Blog'
 
@@ -13,16 +22,19 @@ describe('Blog', () => {
     likes: 1,
   }
 
-  const likeHandler = jest.fn()
+  const queryClient = new QueryClient()
+
+  beforeAll(() => {
+    queryClient.setQueryData('blogs', [])
+  })
 
   beforeEach(() => {
     render(
-      <Blog
-        blog={blog}
-        remove={jest.fn()}
-        canRemove={true}
-        like={likeHandler}
-      />,
+      <QueryClientProvider client={queryClient}>
+        <StoreContextProvider>
+          <Blog id={blog.id} blog={blog} />
+        </StoreContextProvider>
+      </QueryClientProvider>,
     )
   })
 
@@ -56,6 +68,10 @@ describe('Blog', () => {
     await user.click(likeButton)
     await user.click(likeButton)
 
-    expect(likeHandler.mock.calls).toHaveLength(2)
+    expect(blogService.updateBlog.mock.calls).toHaveLength(2)
+  })
+
+  afterEach(() => {
+    jest.restoreAllMocks()
   })
 })

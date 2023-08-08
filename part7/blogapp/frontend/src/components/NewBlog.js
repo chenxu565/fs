@@ -12,9 +12,10 @@ const BlogForm = ({ blogFormRef }) => {
 
   const createBlogMutation = useMutation(blogService.createBlog, {
     onSuccess: (newBlog) => {
-      const blogs = queryClient.getQueryData('blogs')
-      console.log(blogs)
-      console.log(newBlog)
+      // console.log('Returned from mock createBlog', newBlog)
+      const blogs = queryClient.getQueryData('blogs') || []
+      // console.log(blogs)
+      // console.log(newBlog)
       queryClient.setQueryData('blogs', blogs.concat(newBlog))
       notifyWith(`A new blog '${newBlog.title}' by '${newBlog.author}' added`)
       blogFormRef.current.toggleVisibility()
@@ -26,7 +27,7 @@ const BlogForm = ({ blogFormRef }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    console.log('create new blog', title, author, url)
+    // console.log('create new blog', title, author, url)
     createBlogMutation.mutate({ title, author, url })
   }
 

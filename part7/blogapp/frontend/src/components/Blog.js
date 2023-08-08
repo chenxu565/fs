@@ -3,14 +3,14 @@ import PropTypes from 'prop-types'
 import { useMutation, useQueryClient } from 'react-query'
 import blogService from '../services/blogs'
 import { useNotifyWith, useStoreValue } from '../StoreContext'
-import storageService from '../services/storage'
+// import storageService from '../services/storage'
 
 const Blog = ({ blog }) => {
   const [visible, setVisible] = useState(false)
   const queryClient = useQueryClient()
   const notifyWith = useNotifyWith()
   const { storageUser: user } = useStoreValue()
-  const chromeUser = storageService.loadUser()
+  // const chromeUser = storageService.loadUser()
 
   const canRemove = user && user.username === blog.user.username
 
@@ -51,8 +51,8 @@ const Blog = ({ blog }) => {
   }
 
   const remove = async () => {
-    console.log('remove, user', user)
-    console.log('remove, chromeUser', chromeUser)
+    // console.log('remove, user', user)
+    // console.log('remove, chromeUser', chromeUser)
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
       deleteBlogMutation.mutate(blog)
     }

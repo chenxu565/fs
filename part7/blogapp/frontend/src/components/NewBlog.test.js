@@ -2,20 +2,64 @@ import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { QueryClient, QueryClientProvider } from 'react-query'
+import { StoreContextProvider } from '../StoreContext'
 
-import NewBlog from './NewBlog'
+jest.mock('../services/blogs', () => {
+  return {
+    __esModule: true,
+    default: {
+      createBlog: jest.fn(() => {
+        // console.log('createBlog mock function called')
+        const mockValue = {
+          title: 'Goto considered useful',
+          author: 'Edsger Dijkstra',
+          url: 'acm.com/goto',
+        }
+        return Promise.resolve(mockValue)
+      }),
+    },
+  }
+})
 
 describe('NewBlog', () => {
-  test('if liked twice, ', async () => {
-    const createHandler = jest.fn()
-    render(<NewBlog createBlog={createHandler} />)
+  let NewBlog
+  let blogService
 
-    const input = {
-      title: 'Goto considered useful',
-      author: 'Edsger Dijkstra',
-      url: 'acm.com/goto',
+  const input = {
+    title: 'Goto considered useful',
+    author: 'Edsger Dijkstra',
+    url: 'acm.com/goto',
+  }
+
+  const queryClient = new QueryClient()
+
+  beforeAll(() => {
+    queryClient.setQueryData('blogs', [])
+  })
+
+  beforeEach(async () => {
+    const NewBlogModule = await import('./NewBlog')
+    NewBlog = NewBlogModule.default
+
+    const blogServiceModule = await import('../services/blogs')
+    blogService = blogServiceModule.default
+
+    const mockRef = {
+      current: {
+        toggleVisibility: jest.fn(),
+      },
     }
+    render(
+      <QueryClientProvider client={queryClient}>
+        <StoreContextProvider>
+          <NewBlog blogFormRef={mockRef} />
+        </StoreContextProvider>
+      </QueryClientProvider>,
+    )
+  })
 
+  test('Adding a new blog should invoke action', async () => {
     const user = userEvent.setup()
 
     const titleInput = screen.getByPlaceholderText('title')
@@ -30,9 +74,6 @@ describe('NewBlog', () => {
     const showButton = screen.getByText('create')
     await user.click(showButton)
 
-    const calls = createHandler.mock.calls
-
-    expect(calls).toHaveLength(1)
-    expect(calls[0][0]).toEqual(input)
+    expect(blogService.createBlog).toHaveBeenCalledWith(input)
   })
 })
