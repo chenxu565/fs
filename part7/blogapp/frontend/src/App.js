@@ -1,26 +1,21 @@
 import { useEffect } from 'react'
 import storageService from './services/storage'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
 import LoginForm from './components/Login'
 import Notification from './components/Notification'
-import LoggedUser from './components/LoggedUser'
+import Menu from './components/Menu'
 import TogglableBlogForm from './components/TogglableNewBlog'
 import Blogs from './components/Blogs'
 import Blog from './components/Blog'
 import Users from './components/Users'
 import User from './components/User'
 
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
-
 import { useSetStorageUser, useStoreValue } from './StoreContext'
 
 const App = () => {
   const setStorageUser = useSetStorageUser()
   const { storageUser: user } = useStoreValue()
-
-  const padding = {
-    padding: 5,
-  }
 
   useEffect(() => {
     const user = storageService.loadUser()
@@ -41,15 +36,7 @@ const App = () => {
   return (
     <Router>
       <div>
-        <div className="menu">
-          <Link style={padding} to="/">
-            blogs
-          </Link>
-          <Link style={padding} to="/users">
-            users
-          </Link>
-          <LoggedUser />
-        </div>
+        <Menu />
         <h2>blogs</h2>
         <Notification />
         <Routes>
