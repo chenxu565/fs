@@ -6,10 +6,10 @@ const User = () => {
   const queryClient = useQueryClient()
 
   const users = queryClient.getQueryData('users')
-  const user = users.find((user) => user.id === id)
-  if (!user) {
+  if (!users) {
     return null
   }
+  const user = users.find((user) => user.id === id)
 
   return (
     <div>

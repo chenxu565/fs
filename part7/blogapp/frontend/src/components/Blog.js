@@ -12,10 +12,8 @@ const Blog = () => {
   const { storageUser: user } = useStoreValue()
   const id = useParams().id
   const blogs = queryClient.getQueryData('blogs')
-  const blog = blogs.find((blog) => blog.id === id)
-  const navigate = useNavigate()
 
-  const canRemove = user && user.username === blog.user.username
+  const navigate = useNavigate()
 
   const updateBlogMutation = useMutation(blogService.updateBlog, {
     onSuccess: (updatedBlog) => {
@@ -71,6 +69,12 @@ const Blog = () => {
   //   padding: 5,
   //   borderStyle: 'solid',
   // }
+  if (!blogs) {
+    return null
+  }
+
+  const blog = blogs.find((blog) => blog.id === id)
+  const canRemove = user && user.username === blog.user.username
 
   return (
     <div>
@@ -81,7 +85,7 @@ const Blog = () => {
       <div>
         {blog.likes} likes <button onClick={like}>like</button>
       </div>
-      <div>added by {blog.author}</div>
+      <div>added by {blog.user.name}</div>
       {canRemove && (
         <div>
           <button onClick={remove}>remove</button>
