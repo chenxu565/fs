@@ -37,7 +37,9 @@ const Blogs = () => {
       <div>
         {blogs.sort(byLikes).map((blog) => (
           <div key={blog.id} style={style}>
-            <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+            <Link to={`/blogs/${blog.id}`}>
+              {blog.title} {blog.author}
+            </Link>
           </div>
         ))}
       </div>
