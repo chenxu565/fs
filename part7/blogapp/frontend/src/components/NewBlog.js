@@ -29,6 +29,9 @@ const BlogForm = ({ blogFormRef }) => {
     event.preventDefault()
     // console.log('create new blog', title, author, url)
     createBlogMutation.mutate({ title, author, url })
+    setTitle('')
+    setAuthor('')
+    setUrl('')
   }
 
   return (
