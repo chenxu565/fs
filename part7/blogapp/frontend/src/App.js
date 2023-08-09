@@ -6,6 +6,10 @@ import Notification from './components/Notification'
 import LoggedUser from './components/LoggedUser'
 import TogglableBlogForm from './components/TogglableNewBlog'
 import Blogs from './components/Blogs'
+import Users from './components/Users'
+import User from './components/User'
+
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
 import { useSetStorageUser, useStoreValue } from './StoreContext'
 
@@ -30,13 +34,26 @@ const App = () => {
   }
 
   return (
-    <div>
-      <h2>blogs</h2>
-      <Notification />
-      <LoggedUser />
-      <TogglableBlogForm />
-      <Blogs />
-    </div>
+    <Router>
+      <div>
+        <h2>blogs</h2>
+        <Notification />
+        <LoggedUser />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <div>
+                <TogglableBlogForm />
+                <Blogs />
+              </div>
+            }
+          />
+          <Route path="/users" element={<Users />} />
+          <Route path="/users/:id" element={<User />} />
+        </Routes>
+      </div>
+    </Router>
   )
 }
 
