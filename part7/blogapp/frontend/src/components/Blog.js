@@ -1,16 +1,19 @@
-import { useState } from 'react'
+// import { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useMutation, useQueryClient } from 'react-query'
 import blogService from '../services/blogs'
 import { useNotifyWith, useStoreValue } from '../StoreContext'
-// import storageService from '../services/storage'
+import { useParams, useNavigate } from 'react-router-dom'
 
-const Blog = ({ blog }) => {
-  const [visible, setVisible] = useState(false)
+const Blog = () => {
+  // const [visible, setVisible] = useState(false)
   const queryClient = useQueryClient()
   const notifyWith = useNotifyWith()
   const { storageUser: user } = useStoreValue()
-  // const chromeUser = storageService.loadUser()
+  const id = useParams().id
+  const blogs = queryClient.getQueryData('blogs')
+  const blog = blogs.find((blog) => blog.id === id)
+  const navigate = useNavigate()
 
   const canRemove = user && user.username === blog.user.username
 
@@ -38,6 +41,7 @@ const Blog = ({ blog }) => {
     },
     onError: (error) => {
       console.log(error)
+      notifyWith('Error removing blog')
     },
   })
 
@@ -54,36 +58,55 @@ const Blog = ({ blog }) => {
     // console.log('remove, user', user)
     // console.log('remove, chromeUser', chromeUser)
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
-      deleteBlogMutation.mutate(blog)
+      deleteBlogMutation.mutate(blog, {
+        onSuccess: () => {
+          navigate('/')
+        },
+      })
     }
   }
 
-  const style = {
-    marginBottom: 2,
-    padding: 5,
-    borderStyle: 'solid',
-  }
+  // const style = {
+  //   marginBottom: 2,
+  //   padding: 5,
+  //   borderStyle: 'solid',
+  // }
 
   return (
-    <div style={style} className="blog">
-      {blog.title} {blog.author}
-      <button onClick={() => setVisible(!visible)}>
-        {visible ? 'hide' : 'show'}
-      </button>
-      {visible && (
+    <div>
+      <h2>{blog.title}</h2>
+      <div>
+        <a href={blog.url}>{blog.url}</a>
+      </div>
+      <div>
+        {blog.likes} likes <button onClick={like}>like</button>
+      </div>
+      <div>added by {blog.author}</div>
+      {canRemove && (
         <div>
-          <div>
-            {' '}
-            <a href={blog.url}> {blog.url}</a>{' '}
-          </div>
-          <div>
-            likes {blog.likes} <button onClick={like}>like</button>
-          </div>
-          <div>{blog.user && blog.user.name}</div>
-          {canRemove && <button onClick={remove}>delete</button>}
+          <button onClick={remove}>remove</button>
         </div>
       )}
     </div>
+    // <div style={style} className="blog">
+    //   {blog.title} {blog.author}
+    //   <button onClick={() => setVisible(!visible)}>
+    //     {visible ? 'hide' : 'show'}
+    //   </button>
+    //   {visible && (
+    //     <div>
+    //       <div>
+    //         {' '}
+    //         <a href={blog.url}> {blog.url}</a>{' '}
+    //       </div>
+    //       <div>
+    //         likes {blog.likes} <button onClick={like}>like</button>
+    //       </div>
+    //       <div>{blog.user && blog.user.name}</div>
+    //       {canRemove && <button onClick={remove}>delete</button>}
+    //     </div>
+    //   )}
+    // </div>
   )
 }
 
