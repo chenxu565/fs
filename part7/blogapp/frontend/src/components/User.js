@@ -1,15 +1,19 @@
 import { useParams } from 'react-router-dom'
-import { useQueryClient } from 'react-query'
+import { useQuery } from 'react-query'
+import userService from '../services/users'
 
 const User = () => {
   const id = useParams().id
-  const queryClient = useQueryClient()
+  const {
+    data: users,
+    isLoading,
+    isError,
+  } = useQuery('users', userService.getAllUsers)
+  if (isLoading) return 'Loading...'
+  if (isError) return 'An error has occurred: ' + isError.message
 
-  const users = queryClient.getQueryData('users')
-  if (!users) {
-    return null
-  }
   const user = users.find((user) => user.id === id)
+  if (!user) return 'User not found'
 
   return (
     <div>
