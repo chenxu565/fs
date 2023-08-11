@@ -1,9 +1,10 @@
 // import { useState } from 'react'
 import PropTypes from 'prop-types'
-import { useMutation, useQueryClient } from 'react-query'
+import { useQuery, useMutation, useQueryClient } from 'react-query'
 import blogService from '../services/blogs'
 import { useNotifyWith, useStoreValue } from '../StoreContext'
 import { useParams, useNavigate } from 'react-router-dom'
+import NewComment from './NewComment'
 
 const Blog = () => {
   // const [visible, setVisible] = useState(false)
@@ -11,9 +12,15 @@ const Blog = () => {
   const notifyWith = useNotifyWith()
   const { storageUser: user } = useStoreValue()
   const id = useParams().id
-  const blogs = queryClient.getQueryData('blogs')
+  // const blogs = queryClient.getQueryData('blogs')
 
   const navigate = useNavigate()
+
+  const {
+    data: blogs,
+    isLoading,
+    isError,
+  } = useQuery('blogs', blogService.getAllBlogs)
 
   const updateBlogMutation = useMutation(blogService.updateBlog, {
     onSuccess: (updatedBlog) => {
@@ -69,12 +76,16 @@ const Blog = () => {
   //   padding: 5,
   //   borderStyle: 'solid',
   // }
-  if (!blogs) {
-    return null
-  }
+  // if (!blogs) {
+  //   return null
+  // }
+  if (isLoading) return 'Loading...'
+  if (isError) return 'An error has occurred: ' + isError.message
 
-  const blog = blogs.find((blog) => blog.id === id)
+  const blog = blogs.find((b) => b.id === id)
+  if (!blog) return 'Blog not found'
   const canRemove = user && user.username === blog.user.username
+  const comments = blog.comments
 
   return (
     <div>
@@ -93,6 +104,13 @@ const Blog = () => {
           <button onClick={remove}>remove</button>
         </div>
       )}
+      <h3>comments</h3>
+      <NewComment blog={blog} />
+      <ul>
+        {comments.map((comment, index) => (
+          <li key={index}>{comment}</li>
+        ))}
+      </ul>
     </div>
     // <div style={style} className="blog">
     //   {blog.title} {blog.author}
