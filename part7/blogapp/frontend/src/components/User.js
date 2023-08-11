@@ -8,7 +8,10 @@ const User = () => {
     data: users,
     isLoading,
     isError,
-  } = useQuery('users', userService.getAllUsers)
+  } = useQuery('users', userService.getAllUsers, {
+    retry: 1,
+    refetchOnWindowFocus: false,
+  })
   if (isLoading) return 'Loading...'
   if (isError) return 'An error has occurred: ' + isError.message
 

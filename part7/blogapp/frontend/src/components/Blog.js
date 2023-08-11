@@ -20,7 +20,10 @@ const Blog = () => {
     data: blogs,
     isLoading,
     isError,
-  } = useQuery('blogs', blogService.getAllBlogs)
+  } = useQuery('blogs', blogService.getAllBlogs, {
+    retry: 1,
+    refetchOnWindowFocus: false,
+  })
 
   const updateBlogMutation = useMutation(blogService.updateBlog, {
     onSuccess: (updatedBlog) => {
