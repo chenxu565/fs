@@ -1,12 +1,12 @@
-import { useState } from 'react'
 import { useSetStorageUser, useNotifyWith } from '../StoreContext'
 import loginService from '../services/login'
 import storageService from '../services/storage'
 import { useNavigate } from 'react-router-dom'
+import { useField } from '../hooks'
 
 const LoginForm = () => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const [username] = useField('username')
+  const [password] = useField('password')
   const setStorageUser = useSetStorageUser()
   const notifyWith = useNotifyWith()
   const navigate = useNavigate()
@@ -14,7 +14,10 @@ const LoginForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault()
     try {
-      const user = await loginService.login({ username, password })
+      const user = await loginService.login({
+        username: username.value,
+        password: password.value,
+      })
       setStorageUser(user)
       storageService.saveUser(user)
       notifyWith('welcome!')
@@ -32,20 +35,11 @@ const LoginForm = () => {
     <form onSubmit={handleSubmit}>
       <div>
         username
-        <input
-          id="username"
-          value={username}
-          onChange={({ target }) => setUsername(target.value)}
-        />
+        <input {...username} />
       </div>
       <div>
         password
-        <input
-          id="password"
-          type="password"
-          value={password}
-          onChange={({ target }) => setPassword(target.value)}
-        />
+        <input {...password} />
       </div>
       <button id="login-button" type="submit">
         login

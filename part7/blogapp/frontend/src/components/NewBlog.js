@@ -1,12 +1,12 @@
-import { useState } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
 import blogService from '../services/blogs'
 import { useNotifyWith } from '../StoreContext'
+import { useField } from '../hooks'
 
 const BlogForm = ({ blogFormRef }) => {
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+  const [title, resetTitle] = useField('title')
+  const [author, resetAuthor] = useField('author')
+  const [url, resetUrl] = useField('url')
   const queryClient = useQueryClient()
   const notifyWith = useNotifyWith()
 
@@ -28,10 +28,14 @@ const BlogForm = ({ blogFormRef }) => {
   const handleSubmit = async (event) => {
     event.preventDefault()
     // console.log('create new blog', title, author, url)
-    createBlogMutation.mutate({ title, author, url })
-    setTitle('')
-    setAuthor('')
-    setUrl('')
+    createBlogMutation.mutate({
+      title: title.value,
+      author: author.value,
+      url: url.value,
+    })
+    resetTitle()
+    resetAuthor()
+    resetUrl()
   }
 
   return (
@@ -41,30 +45,15 @@ const BlogForm = ({ blogFormRef }) => {
       <form onSubmit={handleSubmit}>
         <div>
           title
-          <input
-            id="title"
-            placeholder="title"
-            value={title}
-            onChange={({ target }) => setTitle(target.value)}
-          />
+          <input {...title} />
         </div>
         <div>
           author
-          <input
-            id="author"
-            placeholder="author"
-            value={author}
-            onChange={({ target }) => setAuthor(target.value)}
-          />
+          <input {...author} />
         </div>
         <div>
           url
-          <input
-            id="url"
-            placeholder="url"
-            value={url}
-            onChange={({ target }) => setUrl(target.value)}
-          />
+          <input {...url} type="text" />
         </div>
         <button type="submit">create</button>
       </form>

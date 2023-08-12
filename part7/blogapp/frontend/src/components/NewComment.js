@@ -1,13 +1,14 @@
 import blogService from '../services/blogs'
 import { useQueryClient } from 'react-query'
+import { useField } from '../hooks'
 
 const NewComment = ({ blog }) => {
+  const [comment, resetComment] = useField('comment')
   const queryClient = useQueryClient()
   const addComment = async (event) => {
     event.preventDefault()
-    const comment = event.target.comment.value
-    event.target.comment.value = ''
-    const updatedBlog = await blogService.addCommentToBlog(blog, comment)
+    const updatedBlog = await blogService.addCommentToBlog(blog, comment.value)
+    resetComment()
 
     const blogs = queryClient.getQueryData('blogs')
     queryClient.setQueryData(
@@ -18,7 +19,7 @@ const NewComment = ({ blog }) => {
 
   return (
     <form onSubmit={addComment}>
-      <input name="comment" />
+      <input {...comment} />
       <button type="submit">add comment</button>
     </form>
   )
