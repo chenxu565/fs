@@ -7,8 +7,14 @@ const NewComment = ({ blog }) => {
   const queryClient = useQueryClient()
   const addComment = async (event) => {
     event.preventDefault()
-    const updatedBlog = await blogService.addCommentToBlog(blog, comment.value)
-    resetComment()
+    let updatedBlog = null
+    try {
+      updatedBlog = await blogService.addCommentToBlog(blog, comment.value)
+      resetComment()
+    } catch (error) {
+      console.log(error)
+      return
+    }
 
     const blogs = queryClient.getQueryData('blogs')
     queryClient.setQueryData(
