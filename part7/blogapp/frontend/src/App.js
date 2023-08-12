@@ -23,36 +23,36 @@ const App = () => {
     // console.log('user', user)
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  if (!user) {
-    return (
-      <div>
-        <h2>log in to application</h2>
-        <Notification />
-        <LoginForm />
-      </div>
-    )
-  }
-
   return (
     <Router>
       <div>
-        <Menu />
-        <h2>blog app</h2>
-        <Notification />
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <div>
-                <TogglableBlogForm />
-                <Blogs />
-              </div>
-            }
-          />
-          <Route path="/users" element={<Users />} />
-          <Route path="/users/:id" element={<User />} />
-          <Route path="/blogs/:id" element={<Blog />} />
-        </Routes>
+        {!user ? (
+          <>
+            <h2>log in to application</h2>
+            <Notification />
+            <LoginForm />
+          </>
+        ) : (
+          <>
+            <Menu />
+            <h2>blog app</h2>
+            <Notification />
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <div>
+                    <TogglableBlogForm />
+                    <Blogs />
+                  </div>
+                }
+              />
+              <Route path="/users" element={<Users />} />
+              <Route path="/users/:id" element={<User />} />
+              <Route path="/blogs/:id" element={<Blog />} />
+            </Routes>
+          </>
+        )}
       </div>
     </Router>
   )

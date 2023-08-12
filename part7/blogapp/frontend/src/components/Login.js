@@ -2,12 +2,14 @@ import { useState } from 'react'
 import { useSetStorageUser, useNotifyWith } from '../StoreContext'
 import loginService from '../services/login'
 import storageService from '../services/storage'
+import { useNavigate } from 'react-router-dom'
 
 const LoginForm = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const setStorageUser = useSetStorageUser()
   const notifyWith = useNotifyWith()
+  const navigate = useNavigate()
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -16,6 +18,7 @@ const LoginForm = () => {
       setStorageUser(user)
       storageService.saveUser(user)
       notifyWith('welcome!')
+      navigate('/')
     } catch (e) {
       if (e.response.status === 401) {
         notifyWith('wrong username or password', 'error')
