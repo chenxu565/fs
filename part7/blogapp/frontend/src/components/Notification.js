@@ -1,4 +1,5 @@
 import { useStoreValue } from '../StoreContext'
+import { Alert } from 'react-bootstrap'
 
 const Notification = () => {
   const info = useStoreValue().notice
@@ -16,7 +17,12 @@ const Notification = () => {
     marginBottom: 10,
   }
 
-  return <div style={style}>{info.message}</div>
+  // return <div style={style}>{info.message}</div>
+  return (
+    <Alert variant={info.type} style={style}>
+      {info.message}
+    </Alert>
+  )
 }
 
 export default Notification

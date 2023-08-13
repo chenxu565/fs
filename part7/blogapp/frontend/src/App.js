@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import storageService from './services/storage'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 
 import LoginForm from './components/Login'
 import Notification from './components/Notification'
@@ -24,37 +24,35 @@ const App = () => {
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <Router>
-      <div>
-        {!user ? (
-          <>
-            <h2>log in to application</h2>
-            <Notification />
-            <LoginForm />
-          </>
-        ) : (
-          <>
-            <Menu />
-            <h2>blog app</h2>
-            <Notification />
-            <Routes>
-              <Route
-                path="/"
-                element={
-                  <div>
-                    <TogglableBlogForm />
-                    <Blogs />
-                  </div>
-                }
-              />
-              <Route path="/users" element={<Users />} />
-              <Route path="/users/:id" element={<User />} />
-              <Route path="/blogs/:id" element={<Blog />} />
-            </Routes>
-          </>
-        )}
-      </div>
-    </Router>
+    <div className="container">
+      {!user ? (
+        <>
+          <h2>log in to application</h2>
+          <Notification />
+          <LoginForm />
+        </>
+      ) : (
+        <>
+          <Menu />
+          <h2>blog app</h2>
+          <Notification />
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <div>
+                  <TogglableBlogForm />
+                  <Blogs />
+                </div>
+              }
+            />
+            <Route path="/users" element={<Users />} />
+            <Route path="/users/:id" element={<User />} />
+            <Route path="/blogs/:id" element={<Blog />} />
+          </Routes>
+        </>
+      )}
+    </div>
   )
 }
 

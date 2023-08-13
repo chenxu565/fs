@@ -3,6 +3,7 @@ import loginService from '../services/login'
 import storageService from '../services/storage'
 import { useNavigate } from 'react-router-dom'
 import { useField } from '../hooks'
+import { Form, Button } from 'react-bootstrap'
 
 const LoginForm = () => {
   const [username] = useField('username')
@@ -32,19 +33,30 @@ const LoginForm = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        username
-        <input {...username} />
-      </div>
-      <div>
-        password
-        <input {...password} />
-      </div>
-      <button id="login-button" type="submit">
+    <Form onSubmit={handleSubmit}>
+      <Form.Group>
+        <Form.Label>username</Form.Label>
+        <Form.Control {...username} />
+        <Form.Label>password</Form.Label>
+        <Form.Control {...password} />
+      </Form.Group>
+      <Button id="login-button" type="submit" variant="primary">
         login
-      </button>
-    </form>
+      </Button>
+    </Form>
+    // <form onSubmit={handleSubmit}>
+    //   <div>
+    //     username
+    //     <input {...username} />
+    //   </div>
+    //   <div>
+    //     password
+    //     <input {...password} />
+    //   </div>
+    //   <button id="login-button" type="submit">
+    //     login
+    //   </button>
+    // </form>
   )
 }
 

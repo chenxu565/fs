@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from 'react-query'
 import blogService from '../services/blogs'
 import { useNotifyWith } from '../StoreContext'
 import { useField } from '../hooks'
+import { Form, Button } from 'react-bootstrap'
 
 const BlogForm = ({ blogFormRef }) => {
   const [title, resetTitle] = useField('title')
@@ -41,8 +42,20 @@ const BlogForm = ({ blogFormRef }) => {
   return (
     <div>
       <h4>Create a new blog</h4>
-
-      <form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit}>
+        <Form.Group>
+          <Form.Label>title</Form.Label>
+          <Form.Control {...title} />
+          <Form.Label>author</Form.Label>
+          <Form.Control {...author} />
+          <Form.Label>url</Form.Label>
+          <Form.Control {...url} />
+        </Form.Group>
+        <Button id="create-blog-button" type="submit" variant="primary">
+          create
+        </Button>
+      </Form>
+      {/* <form onSubmit={handleSubmit}>
         <div>
           title
           <input {...title} />
@@ -56,7 +69,7 @@ const BlogForm = ({ blogFormRef }) => {
           <input {...url} type="text" />
         </div>
         <button type="submit">create</button>
-      </form>
+      </form> */}
     </div>
   )
 }

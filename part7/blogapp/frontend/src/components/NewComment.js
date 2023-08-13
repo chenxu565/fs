@@ -1,6 +1,7 @@
 import blogService from '../services/blogs'
 import { useQueryClient } from 'react-query'
 import { useField } from '../hooks'
+import { Form, Button } from 'react-bootstrap'
 
 const NewComment = ({ blog }) => {
   const [comment, resetComment] = useField('comment')
@@ -24,10 +25,18 @@ const NewComment = ({ blog }) => {
   }
 
   return (
-    <form onSubmit={addComment}>
-      <input {...comment} />
-      <button type="submit">add comment</button>
-    </form>
+    <Form onSubmit={addComment}>
+      <Form.Group>
+        <Form.Control {...comment} />
+      </Form.Group>
+      <Button type="submit" variant="primary" id="add-new-comment">
+        add comment
+      </Button>
+    </Form>
+    // <form onSubmit={addComment}>
+    //   <input {...comment} />
+    //   <button type="submit">add comment</button>
+    // </form>
   )
 }
 
