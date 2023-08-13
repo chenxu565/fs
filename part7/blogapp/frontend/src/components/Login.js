@@ -3,6 +3,7 @@ import loginService from '../services/login'
 import storageService from '../services/storage'
 import { useNavigate } from 'react-router-dom'
 import { useField } from '../hooks'
+import { Input, Button } from './StyledComponents'
 
 const LoginForm = () => {
   const [username] = useField('username')
@@ -35,15 +36,15 @@ const LoginForm = () => {
     <form onSubmit={handleSubmit}>
       <div>
         username
-        <input {...username} />
+        <Input {...username} />
       </div>
       <div>
         password
-        <input {...password} />
+        <Input {...password} />
       </div>
-      <button id="login-button" type="submit">
+      <Button id="login-button" type="submit">
         login
-      </button>
+      </Button>
     </form>
   )
 }

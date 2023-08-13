@@ -10,6 +10,7 @@ import Blogs from './components/Blogs'
 import Blog from './components/Blog'
 import Users from './components/Users'
 import User from './components/User'
+import { Page } from './components/StyledComponents'
 
 import { useSetStorageUser, useStoreValue } from './StoreContext'
 
@@ -25,7 +26,7 @@ const App = () => {
 
   return (
     <Router>
-      <div>
+      <Page>
         {!user ? (
           <>
             <h2>log in to application</h2>
@@ -53,7 +54,7 @@ const App = () => {
             </Routes>
           </>
         )}
-      </div>
+      </Page>
     </Router>
   )
 }

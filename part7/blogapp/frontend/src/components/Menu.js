@@ -1,13 +1,14 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import LoggedUser from './LoggedUser'
+import { Navigation } from './StyledComponents'
 
 const Menu = () => {
   const padding = {
     padding: 5,
   }
   return (
-    <div className="menu">
+    <Navigation>
       <Link style={padding} to="/">
         blogs
       </Link>
@@ -15,7 +16,7 @@ const Menu = () => {
         users
       </Link>
       <LoggedUser />
-    </div>
+    </Navigation>
   )
 }
 

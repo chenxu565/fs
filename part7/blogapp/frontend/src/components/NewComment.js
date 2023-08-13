@@ -1,6 +1,7 @@
 import blogService from '../services/blogs'
 import { useQueryClient } from 'react-query'
 import { useField } from '../hooks'
+import { Input, Button } from './StyledComponents'
 
 const NewComment = ({ blog }) => {
   const [comment, resetComment] = useField('comment')
@@ -25,8 +26,8 @@ const NewComment = ({ blog }) => {
 
   return (
     <form onSubmit={addComment}>
-      <input {...comment} />
-      <button type="submit">add comment</button>
+      <Input {...comment} />
+      <Button type="submit">add comment</Button>
     </form>
   )
 }

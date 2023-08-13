@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from 'react-query'
 import blogService from '../services/blogs'
 import { useNotifyWith } from '../StoreContext'
 import { useField } from '../hooks'
+import { Input, Button } from './StyledComponents'
 
 const BlogForm = ({ blogFormRef }) => {
   const [title, resetTitle] = useField('title')
@@ -45,17 +46,17 @@ const BlogForm = ({ blogFormRef }) => {
       <form onSubmit={handleSubmit}>
         <div>
           title
-          <input {...title} />
+          <Input {...title} />
         </div>
         <div>
           author
-          <input {...author} />
+          <Input {...author} />
         </div>
         <div>
           url
-          <input {...url} type="text" />
+          <Input {...url} type="text" />
         </div>
-        <button type="submit">create</button>
+        <Button type="submit">create</Button>
       </form>
     </div>
   )
