@@ -22,7 +22,7 @@ const Blog = ({ blog, handleBlogUpdate, handleBlogRemoval }) => {
       likes: blog.likes + 1,
       user: blog.user.id
     }
-    handleBlogUpdate(updatedBlog)
+    await handleBlogUpdate(updatedBlog)
   }
 
   return (
