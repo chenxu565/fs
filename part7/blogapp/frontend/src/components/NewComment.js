@@ -1,6 +1,7 @@
 import blogService from '../services/blogs'
 import { useQueryClient } from 'react-query'
 import { useField } from '../hooks'
+import { TextField, Button } from '@mui/material'
 
 const NewComment = ({ blog }) => {
   const [comment, resetComment] = useField('comment')
@@ -25,9 +26,22 @@ const NewComment = ({ blog }) => {
 
   return (
     <form onSubmit={addComment}>
-      <input {...comment} />
-      <button type="submit">add comment</button>
+      <div>
+        <TextField
+          label="comment"
+          variant="outlined"
+          size="small"
+          {...comment}
+        />
+      </div>
+      <Button variant="contained" type="submit" color="primary">
+        add comment
+      </Button>
     </form>
+    // <form onSubmit={addComment}>
+    //   <input {...comment} />
+    //   <button type="submit">add comment</button>
+    // </form>
   )
 }
 
