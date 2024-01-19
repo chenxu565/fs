@@ -26,3 +26,46 @@ This repository houses my coursework for the [Full Stack Open course](https://fu
 - Testing React apps
 - Advanced state management
 
+## Cornerstone Project: BlogApp (Part 7)
+Part 7 of the course culminates in a comprehensive project called BlogApp, which serves as a cornerstone of my learning journey. The BlogApp integrates the full spectrum of skills and technologies learned throughout the course. It's a full-stack web application featuring a React frontend and an Express/Node.js backend, with a focus on building robust single-page applications (SPA).
+
+### BlogApp Overview
+- **Frontend**: Developed with React, offering dynamic user interfaces for blog management.
+- **Backend**: Implemented using Node.js and Express, responsible for API endpoints, data handling, and server logic.
+- **Database**: MongoDB for data persistence, handling blog and user data.
+- **Testing**:
+  - **Jest**: Used for backend testing, focusing on testing Express server functionality and MongoDB operations.
+  - **Cypress**: Employed for end-to-end testing of the frontend, ensuring the UI works as expected from a user's perspective.
+- **Key Features**:
+  - CRUD operations for blog posts.
+  - User authentication and authorization.
+  - Responsive and interactive UI components.
+  - Integration of frontend and backend for seamless full-stack functionality.
+
+
+### BlogApp Architecture
+```mermaid
+graph TD
+    subgraph Frontend [React Frontend]
+        F1[App Component]
+        F2[Blog Component]
+        F3[User Component]
+    end
+
+    subgraph Backend [Node.js/Express Backend]
+        B1[Blog Controller]
+        B2[User Controller]
+        B3[Authentication Controller]
+        DB[(MongoDB Database)]
+    end
+
+    F1 -->|API Requests| B1
+    F2 -->|API Requests| B1
+    F3 -->|API Requests| B2
+    B1 -->|CRUD Operations| DB
+    B2 -->|CRUD Operations| DB
+    B3 -->|Auth| DB
+
+    style Frontend fill:#f9f,stroke:#333,stroke-width:2px
+    style Backend fill:#bbf,stroke:#333,stroke-width:2px
+```
