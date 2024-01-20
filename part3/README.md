@@ -67,7 +67,7 @@ And modify the `fly.toml` according to the one on the repo.
 
 Set the secret on Fly.io (replace {password} with the actual password):
 ```
-fly secrets set MONGODB_URI=“mongodb+srv://fullstack:{password}@cluster0.mnfuhu9.mongodb.net/phonebook?retryWrites=true&w=majority”
+fly secrets set MONGODB_URI="mongodb+srv://fullstack:{password}@cluster0.mnfuhu9.mongodb.net/phonebook?retryWrites=true&w=majority"
 ```
 
 Deploy to fly.io using:
