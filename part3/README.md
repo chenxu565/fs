@@ -61,7 +61,7 @@ fly launch
 
 Modify the configuration as needed, such as the `name`. This process will generate new files at the root, like `Dockerfile`.
 
-Update `.dockerignore` to include the `build` folder as it's necessary for the deployment. Note that the `.dockerignore` file is also stored in the repository for reference and consistency across setups.
+Update `.dockerignore` to exclude the `build` folder as it's necessary for the deployment. Note that the `.dockerignore` file is also stored in the repository for reference and consistency across setups.
 
 And modify the `fly.toml` according to the one on the repo.
 
