@@ -27,11 +27,13 @@ const Blog = () => {
 
   const updateBlogMutation = useMutation(blogService.updateBlog, {
     onSuccess: (updatedBlog) => {
-      const blogs = queryClient.getQueryData('blogs')
-      queryClient.setQueryData(
-        'blogs',
-        blogs.map((blog) => (blog.id !== updatedBlog.id ? blog : updatedBlog)),
-      )
+      const currentBlogs = queryClient.getQueryData('blogs')
+      if (currentBlogs) {
+        queryClient.setQueryData(
+          'blogs',
+          currentBlogs.map((blog) => (blog.id !== updatedBlog.id ? blog : updatedBlog)),
+        )
+      }
     },
     onError: (error) => {
       console.log(error)
@@ -40,12 +42,14 @@ const Blog = () => {
 
   const deleteBlogMutation = useMutation(blogService.removeBlog, {
     onSuccess: (deletedBlog) => {
-      const blogs = queryClient.getQueryData('blogs')
-      queryClient.setQueryData(
-        'blogs',
-        blogs.filter((blog) => blog.id !== deletedBlog.id),
-      )
-      notifyWith(`Blog '${deletedBlog.title}' removed`)
+      const currentBlogs = queryClient.getQueryData('blogs')
+      if (currentBlogs) {
+        queryClient.setQueryData(
+          'blogs',
+          currentBlogs.filter((blog) => blog.id !== deletedBlog.id),
+        )
+        notifyWith(`Blog '${deletedBlog.title}' removed`)
+      }
     },
     onError: (error) => {
       console.log(error)
