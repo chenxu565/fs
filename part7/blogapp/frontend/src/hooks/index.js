@@ -20,9 +20,3 @@ export const useField = (string) => {
     reset,
   ]
 }
-
-// modules can have several named exports
-
-// export const useAnotherHook = () => {
-//   // ...
-// }

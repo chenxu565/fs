@@ -55,21 +55,6 @@ const BlogForm = ({ blogFormRef }) => {
           create
         </Button>
       </Form>
-      {/* <form onSubmit={handleSubmit}>
-        <div>
-          title
-          <input {...title} />
-        </div>
-        <div>
-          author
-          <input {...author} />
-        </div>
-        <div>
-          url
-          <input {...url} type="text" />
-        </div>
-        <button type="submit">create</button>
-      </form> */}
     </div>
   )
 }

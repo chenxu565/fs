@@ -8,12 +8,6 @@ const Blogs = () => {
   const { storageUser: user } = useStoreValue()
   const byLikes = (b1, b2) => b2.likes - b1.likes
 
-  // const style = {
-  //   marginBottom: 2,
-  //   padding: 5,
-  //   borderStyle: 'solid',
-  // }
-
   const {
     isLoading,
     isError,
@@ -51,15 +45,6 @@ const Blogs = () => {
           </tbody>
         </Table>
       </div>
-      // <div>
-      //   {blogs.sort(byLikes).map((blog) => (
-      //     <div key={blog.id} style={style}>
-      //       <Link to={`/blogs/${blog.id}`}>
-      //         {blog.title} {blog.author}
-      //       </Link>
-      //     </div>
-      //   ))}
-      // </div>
     )
   }
 }

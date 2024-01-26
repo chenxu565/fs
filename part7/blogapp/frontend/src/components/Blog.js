@@ -27,11 +27,15 @@ const Blog = () => {
 
   const updateBlogMutation = useMutation(blogService.updateBlog, {
     onSuccess: (updatedBlog) => {
-      const blogs = queryClient.getQueryData('blogs')
-      queryClient.setQueryData(
-        'blogs',
-        blogs.map((blog) => (blog.id !== updatedBlog.id ? blog : updatedBlog)),
-      )
+      const currentBlogs = queryClient.getQueryData('blogs')
+      if (currentBlogs) {
+        queryClient.setQueryData(
+          'blogs',
+          currentBlogs.map((blog) =>
+            blog.id !== updatedBlog.id ? blog : updatedBlog,
+          ),
+        )
+      }
     },
     onError: (error) => {
       console.log(error)
@@ -40,12 +44,14 @@ const Blog = () => {
 
   const deleteBlogMutation = useMutation(blogService.removeBlog, {
     onSuccess: (deletedBlog) => {
-      const blogs = queryClient.getQueryData('blogs')
-      queryClient.setQueryData(
-        'blogs',
-        blogs.filter((blog) => blog.id !== deletedBlog.id),
-      )
-      notifyWith(`Blog '${deletedBlog.title}' removed`)
+      const currentBlogs = queryClient.getQueryData('blogs')
+      if (currentBlogs) {
+        queryClient.setQueryData(
+          'blogs',
+          currentBlogs.filter((blog) => blog.id !== deletedBlog.id),
+        )
+        notifyWith(`Blog '${deletedBlog.title}' removed`)
+      }
     },
     onError: (error) => {
       console.log(error)
@@ -74,14 +80,6 @@ const Blog = () => {
     }
   }
 
-  // const style = {
-  //   marginBottom: 2,
-  //   padding: 5,
-  //   borderStyle: 'solid',
-  // }
-  // if (!blogs) {
-  //   return null
-  // }
   if (isLoading) return 'Loading...'
   if (isError) return 'An error has occurred: ' + isError.message
 
@@ -115,25 +113,6 @@ const Blog = () => {
         ))}
       </ul>
     </div>
-    // <div style={style} className="blog">
-    //   {blog.title} {blog.author}
-    //   <button onClick={() => setVisible(!visible)}>
-    //     {visible ? 'hide' : 'show'}
-    //   </button>
-    //   {visible && (
-    //     <div>
-    //       <div>
-    //         {' '}
-    //         <a href={blog.url}> {blog.url}</a>{' '}
-    //       </div>
-    //       <div>
-    //         likes {blog.likes} <button onClick={like}>like</button>
-    //       </div>
-    //       <div>{blog.user && blog.user.name}</div>
-    //       {canRemove && <button onClick={remove}>delete</button>}
-    //     </div>
-    //   )}
-    // </div>
   )
 }
 
