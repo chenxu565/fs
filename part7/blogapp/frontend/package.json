@@ -17,7 +17,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "jest --clearCache && react-scripts test --transformIgnorePatterns \"node_modules/(?!axios)/\"",
+    "test": "react-scripts test --watchAll=false --env=jsdom",
     "eject": "react-scripts eject",
     "eslint": "eslint .",
     "cypress:open": "cypress open",
@@ -43,9 +43,12 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.16.7",
+    "@babel/preset-env": "^7.23.9",
+    "@babel/preset-react": "^7.23.3",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
+    "babel-jest": "^29.7.0",
     "cypress": "^12.17.1",
     "eslint-config-prettier": "8.9.0",
     "eslint-plugin-cypress": "^2.13.3",
@@ -53,5 +56,13 @@
     "eslint-plugin-prettier": "5.0.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "prettier": "3.0.0"
-  }
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.[t|j]sx?$": "babel-jest"
+    },
+    "moduleNameMapper": {
+      "\\.(css|less|sass|scss)$": "identity-obj-proxy"
+    }
+  }  
 }
