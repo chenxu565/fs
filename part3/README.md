@@ -55,7 +55,7 @@ Run the app using `npm start`, and it will be accessible at `http://localhost:30
 
 Navigate to the root of `part3` and log in to Fly.io:
 ```
-fly login
+fly auth login
 fly launch
 ```
 
