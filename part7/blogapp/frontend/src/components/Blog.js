@@ -31,7 +31,9 @@ const Blog = () => {
       if (currentBlogs) {
         queryClient.setQueryData(
           'blogs',
-          currentBlogs.map((blog) => (blog.id !== updatedBlog.id ? blog : updatedBlog)),
+          currentBlogs.map((blog) =>
+            blog.id !== updatedBlog.id ? blog : updatedBlog,
+          ),
         )
       }
     },

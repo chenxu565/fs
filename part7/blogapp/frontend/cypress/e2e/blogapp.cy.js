@@ -88,8 +88,8 @@ describe('Blog app', function () {
     })
   })
 
-  after(function() {
+  after(function () {
     // Code to log out after all tests are done
-    cy.contains('button', 'logout').click(); // Targets a button element containing the text 'logout'
+    cy.contains('button', 'logout').click() // Targets a button element containing the text 'logout'
   })
 })
