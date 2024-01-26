@@ -30,7 +30,8 @@ mongoose
     logger.error('error connecting to MongoDB:', error.message)
   })
 
-app.use(cors())
+// app.use(cors()) // This is used when the frontend and backend are on different directories
+app.use(express.static('build')) // This is used when the frontend build is a subdirectory of the backend
 app.use(express.json())
 
 app.use('/api/blogs', blogsRouter)
