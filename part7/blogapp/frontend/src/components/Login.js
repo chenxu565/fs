@@ -44,19 +44,6 @@ const LoginForm = () => {
         login
       </Button>
     </Form>
-    // <form onSubmit={handleSubmit}>
-    //   <div>
-    //     username
-    //     <input {...username} />
-    //   </div>
-    //   <div>
-    //     password
-    //     <input {...password} />
-    //   </div>
-    //   <button id="login-button" type="submit">
-    //     login
-    //   </button>
-    // </form>
   )
 }
 

@@ -28,16 +28,6 @@ const Menu = () => {
         </Nav>
       </Navbar.Collapse>
     </Navbar>
-
-    // <div className="menu">
-    //   <Link style={padding} to="/">
-    //     blogs
-    //   </Link>
-    //   <Link style={padding} to="/users">
-    //     users
-    //   </Link>
-    //   <LoggedUser />
-    // </div>
   )
 }
 

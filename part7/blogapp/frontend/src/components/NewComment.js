@@ -33,10 +33,6 @@ const NewComment = ({ blog }) => {
         add comment
       </Button>
     </Form>
-    // <form onSubmit={addComment}>
-    //   <input {...comment} />
-    //   <button type="submit">add comment</button>
-    // </form>
   )
 }
 
