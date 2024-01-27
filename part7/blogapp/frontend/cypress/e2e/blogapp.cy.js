@@ -56,24 +56,26 @@ describe('Blog app', function () {
   })
 
   describe('When a blog has been created', function () {
+    const blog = {
+      title: 'You are NOT gonna need it!',
+      author: 'Ron Jeffries',
+      url: 'https://ronjeffries.com/xprog/articles/practices/pracnotneed//',
+    }
+
     beforeEach(function () {
       cy.login({ username: 'mluukkai', password: 'salainen' })
-      cy.createBlog({
-        title: 'You are NOT gonna need it!',
-        author: 'Ron Jeffries',
-        url: 'https://ronjeffries.com/xprog/articles/practices/pracnotneed//',
-      })
+      cy.createBlog(blog)
     })
 
     it('it can be liked', function () {
-      cy.contains('You are NOT gonna need it!').click()
+      cy.contains(blog.title).click()
       cy.contains('like').click()
 
       cy.contains('1 likes')
     })
 
     it('the creator can delete it', function () {
-      cy.contains('You are NOT gonna need it!').click()
+      cy.contains(blog.title).click()
       cy.contains('remove').click()
 
       cy.contains('removed')
@@ -83,8 +85,38 @@ describe('Blog app', function () {
     it('a non creator can not delete a blog', function () {
       cy.contains('logout').click()
       cy.login({ username: 'hellas', password: 'secret' })
-      cy.contains('You are NOT gonna need it!').click()
-      cy.contains('delete').should('not.exist')
+      cy.contains(blog.title).click()
+      cy.contains('remove').should('not.exist')
+    })
+  })
+
+  describe('When multiple blogs have been created', function () {
+    const blogs = [
+      { title: 'blog 1', author: 'author 1', url: 'http://blog1.com' },
+      { title: 'blog 2', author: 'author 2', url: 'http://blog2.com' },
+      { title: 'blog 3', author: 'author 3', url: 'http://blog3.com' },
+    ]
+
+    beforeEach(function () {
+      cy.login({ username: 'mluukkai', password: 'salainen' })
+      blogs.forEach((blog) => cy.createBlog(blog))
+    })
+
+    it('blogs are ordered by likes', function () {
+      cy.contains(blogs[2].title).click()
+      cy.contains('button', 'like').click()
+      cy.contains('liked')
+      cy.contains('button', 'like').click()
+      cy.visit('')
+      cy.contains(blogs[1].title).click()
+      cy.contains('button', 'like').click()
+      cy.visit('')
+
+      cy.get('table.table tr').then((bs) => {
+        cy.wrap(bs[0]).contains(blogs[2].title)
+        cy.wrap(bs[1]).contains(blogs[1].title)
+        cy.wrap(bs[2]).contains(blogs[0].title)
+      })
     })
   })
 
