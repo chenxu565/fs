@@ -3,9 +3,6 @@
 ## Introduction
 This project is the third part of the Full Stack exercise series, focusing on deploying a web application to Fly.io. It integrates the frontend developed in Part 2 with a backend, providing a complete web application deployment.
 
-## TL;DR
-Access the live application here: https://part3-v2.fly.dev/
-
 ## Purpose
 The primary goal of this part is to deploy the entire application on Fly.io, demonstrating the process of deploying a full-stack application in a production environment. Fly.io was chosen for its ease of use, scalability, and performance benefits.
 
